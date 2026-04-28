@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investor Calculators — United Trust Mortgage</title>
+  <meta name="description" content="Free DSCR calculator and rental property mortgage calculator. Instantly calculate your debt service coverage ratio, monthly payment, and cash flow. No sign-up required.">
+  <link rel="canonical" href="../calculators/index.html">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="DSCR & Mortgage Calculator for Rental Properties | United Trust Mortgage">
+  <meta property="og:description" content="Free DSCR calculator and rental property mortgage calculator. Instantly calculate your debt service coverage ratio, monthly payment, and cash flow.">
+  <meta property="og:url" content="/calculators/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DSCR & Mortgage Calculator | United Trust Mortgage">
+  <meta name="twitter:description" content="Free DSCR calculator and rental property mortgage calculator. Calculate your debt service coverage ratio and cash flow.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,1,300;9..144,1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "DSCR & Mortgage Calculator",
+    "description": "Free DSCR calculator and rental property mortgage calculator. Instantly calculate your debt service coverage ratio, monthly payment, and cash flow.",
+    "url": "/calculators/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "provider": { "@type": "Organization", "name": "United Trust Mortgage", "url": "" }
+  }
+  </script>
+  <style>
+    /* ===== Tool Hero ===== */
+    .tool-hero {
+      padding: calc(var(--nav-height) + 80px) 0 60px;
+      background:
+        radial-gradient(1200px 400px at 50% 0%, rgba(201, 169, 97, 0.08), transparent 60%),
+        var(--primary-dark);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .tool-hero h1 { text-wrap: balance; margin-top: 4px; }
+    .tool-hero p {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      color: var(--gray-400);
+      max-width: 620px;
+      margin: 18px auto 0;
+      line-height: 1.7;
+    }
+
+    /* ===== Calculator wrapper ===== */
+    .calc-section { padding: 60px 0; }
+    .calc-wrapper { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+    /* Tabs */
+    .calc-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background: var(--secondary-dark);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      overflow: hidden;
+    }
+    .tab-btn {
+      flex: 1 1 auto;
+      min-width: 110px;
+      padding: 16px 14px;
+      background: transparent;
+      border: none;
+      color: var(--gray-400);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+    .tab-btn:hover:not(.active) {
+      color: var(--white);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* Buydown type selector */
+    .buydown-type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .bd-type-btn {
+      padding: 12px 14px;
+      background: rgba(11,20,16,0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      color: var(--gray-300);
+      font: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .bd-type-btn:hover { border-color: var(--accent-gold); color: var(--white); }
+    .bd-type-btn.active { background: var(--accent-gold); color: var(--primary-dark); border-color: var(--accent-gold); font-weight: 600; }
+
+    /* Calc body */
+    .calc-body {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-top: none;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      backdrop-filter: blur(20px);
+    }
+    .calc-panel { display: none; padding: 40px; }
+    .calc-panel.active { display: block; }
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+
+    /* Fields */
+    .field-group { margin-bottom: 22px; }
+    .field-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; }
+    .input-prefix, .input-suffix {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+    .input-prefix { left: 14px; }
+    .input-suffix { right: 14px; }
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--white);
+      background: rgba(11, 20, 16, 0.6);
+      transition: border-color var(--transition-fast);
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    .input-wrap input::-webkit-outer-spin-button,
+    .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .input-wrap input:focus { border-color: var(--accent-gold); }
+    .has-prefix input { padding-left: 32px; }
+    .has-suffix input { padding-right: 42px; }
+
+    /* Slider */
+    .slider-wrap { margin-top: 12px; }
+    .slider-wrap input[type="range"] {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+      border: none;
+      padding: 0;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .slider-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      border: 3px solid var(--secondary-dark);
+      box-shadow: 0 2px 8px var(--gold-glow);
+      cursor: pointer;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--gray-500);
+    }
+
+    /* Section divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* STR notice */
+    .str-notice {
+      background: linear-gradient(135deg, rgba(201, 169, 97, 0.08), rgba(201, 169, 97, 0.02));
+      border: 1px solid rgba(201, 169, 97, 0.18);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 22px;
+      display: none;
+    }
+    .str-notice.visible { display: block; }
+    .str-notice .str-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .str-notice .str-title::before { content: "✦"; color: var(--accent-gold); font-size: 0.7rem; }
+    .str-notice p { font-size: 0.82rem; color: var(--gray-400); line-height: 1.7; margin-bottom: 12px; }
+    .str-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--transition-fast);
+    }
+    .str-link:hover { border-bottom-color: var(--accent-gold); }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(11, 20, 16, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      margin-bottom: 22px;
+      cursor: pointer;
+      transition: border-color var(--transition-fast);
+    }
+    .toggle-row:hover { border-color: var(--accent-gold); }
+    .toggle-row label { font-size: 0.9rem; font-weight: 600; color: var(--white); cursor: pointer; }
+    .toggle-row .toggle-sub { font-size: 0.78rem; color: var(--gray-400); margin-top: 2px; font-weight: 400; }
+    .toggle { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      border-radius: 26px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      top: 3px;
+      background: var(--white);
+      border-radius: 50%;
+      transition: transform 0.25s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--accent-gold); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* Results panel */
+    .results-panel {
+      background: linear-gradient(180deg, var(--secondary-dark), var(--charcoal));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      color: var(--white);
+    }
+    .results-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-label { font-size: 0.85rem; color: var(--gray-400); }
+    .result-value { font-size: 0.95rem; font-weight: 600; color: var(--white); }
+    .result-row.highlight .result-value {
+      font-size: 1.6rem;
+      color: var(--accent-gold);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* DSCR badge */
+    .dscr-badge {
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      transition: all var(--transition-medium);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .dscr-badge.good { background: rgba(74,222,128,0.10); border-color: rgba(74,222,128,0.3); }
+    .dscr-badge.warn { background: rgba(201, 169, 97, 0.10); border-color: rgba(201, 169, 97, 0.3); }
+    .dscr-badge.bad  { background: rgba(224,123,112,0.10); border-color: rgba(224,123,112,0.3); }
+    .badge-score {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      color: rgba(255,255,255,0.3);
+    }
+    .dscr-badge.good .badge-score { color: #4ADE80; }
+    .dscr-badge.warn .badge-score { color: var(--accent-gold); }
+    .dscr-badge.bad  .badge-score { color: #e07b70; }
+    .badge-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+    }
+    .badge-desc { font-size: 0.82rem; color: var(--gray-400); margin-top: 8px; line-height: 1.6; }
+
+    /* Calc CTA */
+    .calc-cta {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+    .calc-cta p { font-size: 0.85rem; color: var(--gray-400); margin-bottom: 14px; }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition-fast);
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--gold-glow-strong);
+    }
+
+    /* SEO content */
+    .seo-section {
+      padding: 60px 0;
+      background: linear-gradient(180deg, var(--primary-dark), var(--secondary-dark));
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .seo-inner { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+    .seo-inner h2 { font-size: clamp(1.6rem, 3vw, 2rem); color: var(--white); margin-bottom: 16px; }
+    .seo-inner > p { color: var(--gray-300); line-height: 1.8; margin-bottom: 16px; font-size: 1rem; }
+    .seo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .seo-card {
+      padding: 28px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+    }
+    .seo-card h3 { font-size: 1.15rem; color: var(--accent-gold); margin-bottom: 12px; }
+    .seo-card p { font-size: 0.92rem; color: var(--gray-300); line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      .calc-grid { grid-template-columns: 1fr; }
+      .calc-panel { padding: 24px; }
+      .seo-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <img src="../assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img">
+      <span>United Trust</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#programs">Programs</a>
+      <div class="nav-dropdown">
+        <a href="#" class="nav-dropdown-toggle">Tools <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+        <div class="nav-dropdown-menu">
+          <a href="../calculators/index.html">Calculators</a>
+          <a href="../analyze/index.html">Property Analyzer</a>
+          <a href="../str-outlook/index.html">STR Outlook</a>
+          <a href="../market-data/index.html">Market Data</a>
+        </div>
+      </div>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../team.html">Team</a>
+      <a href="../partners.html">Partners</a>
+    </div>
+    <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta">Apply Now</a>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="../index.html#programs">Programs</a>
+  <a href="../calculators/index.html">Calculators</a>
+  <a href="../analyze/index.html">Property Analyzer</a>
+  <a href="../str-outlook/index.html">STR Outlook</a>
+  <a href="../market-data/index.html">Market Data</a>
+  <a href="../blog/index.html">Blog</a>
+  <a href="../team.html">Team</a>
+  <a href="../partners.html">Partners</a>
+  <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:12px;text-align:center;">Apply Now</a>
+</div>
+
+<section class="tool-hero">
+  <div class="container">
+    <span class="section-label" style="margin-bottom:0;">Free Tools</span>
+    <h1>Mortgage <span class="text-gold">Calculators</span></h1>
+    <p>Run the numbers on your next rental property. Calculate your mortgage payment, cash flow, and DSCR ratio instantly.</p>
+  </div>
+</section>
+
+<div class="calc-section">
+  <div class="calc-wrapper">
+
+    <div class="calc-tabs">
+      <button class="tab-btn active" onclick="switchTab('mortgage')">Mortgage</button>
+      <button class="tab-btn" onclick="switchTab('afford')">Affordability</button>
+      <button class="tab-btn" onclick="switchTab('dscr')">DSCR</button>
+      <button class="tab-btn" onclick="switchTab('cashflow')">Cash Flow</button>
+      <button class="tab-btn" onclick="switchTab('brrrr')">BRRRR</button>
+      <button class="tab-btn" onclick="switchTab('refi')">Refi Break-Even</button>
+      <button class="tab-btn" onclick="switchTab('buydown')">Buydown</button>
+    </div>
+
+    <div class="calc-body">
+
+      <!-- MORTGAGE -->
+      <div class="calc-panel active" id="panel-mortgage">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Property Purchase Price</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-price" value="400000" oninput="calcMortgage()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Down Payment</label>
+              <div class="input-wrap has-prefix has-suffix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-down" value="80000" oninput="syncDown('amount'); calcMortgage()">
+                <span class="input-suffix" id="m-down-pct-label">20%</span>
+              </div>
+              <div class="slider-wrap">
+                <input type="range" id="m-down-pct" min="15" max="50" value="20" oninput="syncDown('pct'); calcMortgage()">
+                <div class="slider-labels"><span>15%</span><span>50%</span></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Interest Rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="m-rate" value="7.25" step="0.01" oninput="syncRateFromInput(); calcMortgage()">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="slider-wrap">
+                <input type="range" id="m-rate-slider" min="5" max="12" step="0.25" value="7.25" oninput="syncRate(); calcMortgage()">
+                <div class="slider-labels"><span>5%</span><span>12%</span></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Loan Term</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="m-term" value="30" oninput="calcMortgage()">
+                <span class="input-suffix">yrs</span>
+              </div>
+            </div>
+            <div class="section-divider">Housing Costs</div>
+            <div class="field-group">
+              <label>Annual Property Tax</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-tax" value="4800" oninput="calcMortgage()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Annual Homeowners Insurance</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-ins" value="1800" oninput="calcMortgage()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly HOA</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-hoa" value="0" oninput="calcMortgage()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly PMI / MI</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="m-pmi" value="0" oninput="calcMortgage()">
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">Monthly Payment Breakdown</div>
+            <div class="result-row highlight">
+              <span class="result-label">Total Monthly Payment</span>
+              <span class="result-value" id="m-total">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Principal & Interest</span>
+              <span class="result-value" id="m-pi">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Property Tax</span>
+              <span class="result-value" id="m-tax-mo">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Insurance</span>
+              <span class="result-value" id="m-ins-mo">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">HOA</span>
+              <span class="result-value" id="m-hoa-mo">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">PMI / MI</span>
+              <span class="result-value" id="m-pmi-mo">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Loan Amount</span>
+              <span class="result-value" id="m-loan">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Total Interest Paid</span>
+              <span class="result-value" id="m-int-total">,</span>
+            </div>
+            <div class="calc-cta">
+              <p>Ready to lock in a rate?</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFFORDABILITY -->
+      <div class="calc-panel" id="panel-afford">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Annual Gross Income</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-income" value="180000" oninput="calcAfford()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly Non-Housing Debt</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-debt" value="900" oninput="calcAfford()">
+              </div>
+              <div class="slider-labels" style="margin-top:6px;color:var(--gray-500);"><span>Car loans, student loans, credit-card minimums</span></div>
+            </div>
+            <div class="field-group">
+              <label>Available Down Payment</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-down" value="150000" oninput="calcAfford()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Interest Rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="a-rate" value="6.75" step="0.01" oninput="calcAfford()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Loan Term</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="a-term" value="30" oninput="calcAfford()">
+                <span class="input-suffix">yrs</span>
+              </div>
+            </div>
+
+            <div class="section-divider">DTI Limits</div>
+            <div class="calc-grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="field-group">
+                <label>Max Housing DTI</label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="a-front" value="36" step="0.5" oninput="calcAfford()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+              <div class="field-group">
+                <label>Max Total DTI</label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="a-back" value="43" step="0.5" oninput="calcAfford()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider">Housing Costs</div>
+            <div class="field-group">
+              <label>Property Tax Rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="a-tax-rate" value="1.25" step="0.01" oninput="calcAfford()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Annual Homeowners Insurance</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-ins" value="1800" oninput="calcAfford()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly HOA</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-hoa" value="0" oninput="calcAfford()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly PMI / MI</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="a-pmi" value="0" oninput="calcAfford()">
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">Buying Power</div>
+            <div class="result-row highlight">
+              <span class="result-label">Max Purchase Price</span>
+              <span class="result-value" id="a-price">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Max Loan Amount</span>
+              <span class="result-value" id="a-loan">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Total Monthly Housing</span>
+              <span class="result-value" id="a-total">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Principal & Interest</span>
+              <span class="result-value" id="a-pi">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Property Taxes</span>
+              <span class="result-value" id="a-taxes">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Insurance / HOA / PMI</span>
+              <span class="result-value" id="a-other">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Monthly Gross Income</span>
+              <span class="result-value" id="a-mo-income">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Front DTI / Back DTI</span>
+              <span class="result-value" id="a-dti">,</span>
+            </div>
+            <div class="dscr-badge" id="afford-badge" style="margin-top:22px;">
+              <div class="badge-score" id="afford-headroom" style="font-size:1.4rem;">,</div>
+              <div class="badge-label">Buying Power</div>
+              <div class="badge-desc" id="afford-desc">Based on the tighter of front-end and back-end DTI</div>
+            </div>
+            <div class="calc-cta">
+              <p>Get pre-qualified to lock in your buying power</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DSCR -->
+      <div class="calc-panel" id="panel-dscr">
+        <div class="calc-grid">
+          <div>
+            <div class="toggle-row" onclick="toggleSTR()">
+              <div>
+                <label>Short-Term Rental (Airbnb / VRBO)?</label>
+                <div class="toggle-sub">Affects how income is estimated</div>
+              </div>
+              <label class="toggle" onclick="event.stopPropagation()">
+                <input type="checkbox" id="str-toggle" onchange="toggleSTR()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="str-notice" id="str-notice">
+              <div class="str-title">Get an Accurate STR Income Estimate First</div>
+              <p>Short-term rental income varies significantly by market, seasonality, and property type. We recommend using AirDNA's free Rentalizer to get a data-driven monthly revenue estimate. Then enter that number below.</p>
+              <a href="https://www.airdna.co/rentalizer" target="_blank" rel="noopener" class="str-link">Open AirDNA Rentalizer ↗</a>
+            </div>
+
+            <div class="field-group">
+              <label id="income-label">Monthly Gross Rental Income</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="d-income" value="3200" oninput="calcDSCR()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly Mortgage Payment (P&I)</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="d-mortgage" value="2200" oninput="calcDSCR()">
+              </div>
+            </div>
+            <div class="section-divider">Monthly Expenses</div>
+            <div class="field-group">
+              <label>Property Tax</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="d-tax" value="400" oninput="calcDSCR()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Insurance</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="d-ins" value="150" oninput="calcDSCR()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>HOA / Other Monthly Fees</label>
+              <div class="input-wrap has-prefix">
+                <span class="input-prefix">$</span>
+                <input type="number" id="d-hoa" value="0" oninput="calcDSCR()">
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">DSCR Analysis</div>
+            <div class="result-row">
+              <span class="result-label">Gross Monthly Income</span>
+              <span class="result-value" id="d-gross">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Total Monthly Obligations</span>
+              <span class="result-value" id="d-debt">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Monthly Cash Flow</span>
+              <span class="result-value" id="d-cashflow">,</span>
+            </div>
+            <div class="result-row">
+              <span class="result-label">Annual Net Income</span>
+              <span class="result-value" id="d-annual">,</span>
+            </div>
+
+            <div class="dscr-badge" id="dscr-badge">
+              <div class="badge-score" id="dscr-score">,</div>
+              <div class="badge-label">DSCR Ratio</div>
+              <div class="badge-desc" id="dscr-desc">Enter your numbers above</div>
+            </div>
+
+            <div class="calc-cta">
+              <p>We approve DSCR loans down to 0.75</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASH FLOW -->
+      <div class="calc-panel" id="panel-cashflow">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Monthly Rent</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="cf-rent" value="4200" oninput="calcCashflow()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly PITIA</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="cf-pitia" value="3750" oninput="calcCashflow()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Vacancy Factor</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="cf-vacancy" value="5" step="0.5" oninput="calcCashflow()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Monthly Repairs / CapEx</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="cf-repairs" value="200" oninput="calcCashflow()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Property Management</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="cf-mgmt" value="8" step="0.5" oninput="calcCashflow()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">Cash Flow Analysis</div>
+            <div class="result-row highlight"><span class="result-label">Monthly Net Cash Flow</span><span class="result-value" id="cf-net">$0</span></div>
+            <div class="result-row"><span class="result-label">Annual Net Cash Flow</span><span class="result-value" id="cf-annual">$0</span></div>
+            <div class="result-row"><span class="result-label">Vacancy Loss</span><span class="result-value" id="cf-vacancy-loss">$0</span></div>
+            <div class="result-row"><span class="result-label">Management Fee</span><span class="result-value" id="cf-mgmt-fee">$0</span></div>
+            <div class="result-row"><span class="result-label">Repairs / CapEx</span><span class="result-value" id="cf-repairs-mo">$0</span></div>
+            <div class="calc-cta">
+              <p>Want to lock in pricing on a rental?</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRRRR -->
+      <div class="calc-panel" id="panel-brrrr">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Purchase Price</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="br-purchase" value="500000" oninput="calcBrrrr()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Rehab Budget</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="br-rehab" value="75000" oninput="calcBrrrr()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>After Repair Value (ARV)</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="br-arv" value="700000" oninput="calcBrrrr()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Refi LTV</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="br-ltv" value="75" step="0.5" oninput="calcBrrrr()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Closing Costs</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="br-closing" value="15000" oninput="calcBrrrr()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Holding Costs</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="br-holding" value="12000" oninput="calcBrrrr()">
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">BRRRR Outcome</div>
+            <div class="result-row highlight"><span class="result-label">Cash Out Potential</span><span class="result-value" id="br-cashout">$0</span></div>
+            <div class="result-row"><span class="result-label">Total Project Cost</span><span class="result-value" id="br-total">$0</span></div>
+            <div class="result-row"><span class="result-label">Estimated Refi Loan</span><span class="result-value" id="br-loan">$0</span></div>
+            <div class="result-row"><span class="result-label">Cash Left in Deal</span><span class="result-value" id="br-cashleft">$0</span></div>
+            <div class="result-row"><span class="result-label">Remaining Equity</span><span class="result-value" id="br-equity">$0</span></div>
+            <div class="result-row"><span class="result-label">Spread (ARV − All-In)</span><span class="result-value" id="br-spread">$0</span></div>
+            <div class="calc-cta">
+              <p>Funding your next BRRRR? We do DSCR cash-out refis.</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFI BREAK-EVEN -->
+      <div class="calc-panel" id="panel-refi">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Current Monthly Payment</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="rf-old" value="4200" oninput="calcRefi()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>New Monthly Payment</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="rf-new" value="3750" oninput="calcRefi()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Refinance Closing Costs</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="rf-costs" value="8000" oninput="calcRefi()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Cash Out Proceeds</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="rf-cashout" value="0" oninput="calcRefi()">
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">Refinance Break-Even</div>
+            <div class="result-row highlight"><span class="result-label">Break-Even</span><span class="result-value" id="rf-be">0 mo</span></div>
+            <div class="result-row"><span class="result-label">Monthly Savings</span><span class="result-value" id="rf-savings">$0</span></div>
+            <div class="result-row"><span class="result-label">Net Savings After 12 Months</span><span class="result-value" id="rf-net12">$0</span></div>
+            <div class="result-row"><span class="result-label">Cash Out</span><span class="result-value" id="rf-cashout-out">$0</span></div>
+            <div class="calc-cta">
+              <p>Ready to refinance? We shop multiple lenders.</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUYDOWN -->
+      <div class="calc-panel" id="panel-buydown">
+        <div class="calc-grid">
+          <div>
+            <div class="field-group">
+              <label>Loan Amount</label>
+              <div class="input-wrap has-prefix"><span class="input-prefix">$</span>
+                <input type="number" id="bd-loan" value="600000" oninput="calcBuydown()">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Note Rate</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="bd-rate" value="6.75" step="0.01" oninput="calcBuydown()">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Loan Term</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="bd-term" value="30" oninput="calcBuydown()">
+                <span class="input-suffix">yrs</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Buydown Type</label>
+              <div class="buydown-type-row">
+                <button type="button" class="bd-type-btn active" data-type="2" onclick="setBuydown(2)">2-1 buydown</button>
+                <button type="button" class="bd-type-btn" data-type="1" onclick="setBuydown(1)">1-0 buydown</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel">
+            <div class="results-title">Temporary Buydown</div>
+            <div class="result-row highlight"><span class="result-label">Estimated Buydown Cost</span><span class="result-value" id="bd-cost">$0</span></div>
+            <div class="result-row"><span class="result-label">Full Note Rate Payment</span><span class="result-value" id="bd-full">$0</span></div>
+            <div class="result-row"><span class="result-label">Year 1 Payment</span><span class="result-value" id="bd-y1">$0</span></div>
+            <div class="result-row"><span class="result-label">Year 2 Payment</span><span class="result-value" id="bd-y2">$0</span></div>
+            <div class="result-row"><span class="result-label">Year 1 Rate</span><span class="result-value" id="bd-y1rate">—</span></div>
+            <div class="result-row"><span class="result-label">Year 2 Rate</span><span class="result-value" id="bd-y2rate">—</span></div>
+            <div class="calc-cta">
+              <p>Buyer concession opportunity? Talk to us.</p>
+              <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="cta-btn">Apply Now →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SEO Content -->
+<div class="seo-section">
+  <div class="seo-inner">
+
+    <!-- Mortgage -->
+    <div class="seo-panel" id="seo-mortgage">
+      <h2>How to use the Mortgage Calculator</h2>
+      <p>Estimate your full monthly housing payment — principal &amp; interest plus taxes, insurance, HOA, and PMI/MI. Use it to test purchase price scenarios, downpayment options, and rate-sensitivity before talking to a lender.</p>
+      <p>Adjust the down-payment slider or rate slider to see live changes. The DSCR tab below mirrors the P&amp;I, taxes, and insurance you enter here, so you can move straight from a homeowner scenario into an investor cash-flow check.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>Principal &amp; Interest</h3><p>P&amp;I is calculated from loan amount, rate, and term. Most of the early-year payments go to interest — the amortization tilts toward principal over time.</p></div>
+        <div class="seo-card"><h3>Taxes &amp; Insurance</h3><p>Property taxes and homeowners insurance are entered annually and divided into a monthly impound. Lenders typically collect them in escrow.</p></div>
+        <div class="seo-card"><h3>HOA</h3><p>Monthly HOA isn't escrowed but counts toward DTI underwriting. Condo and PUD borrowers should always include it.</p></div>
+        <div class="seo-card"><h3>PMI / MI</h3><p>Required when LTV exceeds 80% on conventional, or for the life of the loan on most FHA. Conventional MI drops automatically at 78% LTV.</p></div>
+      </div>
+    </div>
+
+    <!-- Affordability -->
+    <div class="seo-panel" id="seo-afford" style="display:none;">
+      <h2>How to use the Affordability Calculator</h2>
+      <p>Convert your gross income, monthly debts, and DTI thresholds into a maximum purchase price. The result is the tighter of two ratios — front-end (housing-only) and back-end (housing plus all debts).</p>
+      <p>The calculator iterates because property tax depends on the price you can afford, and price depends on the loan size left over after tax, insurance, HOA, and PMI come out of your housing budget. Adjust DTI limits to model lender overlays.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>Front-End DTI</h3><p>Housing payment divided by gross monthly income. Conventional caps near 28–36%; we surface 36% by default. FHA flexes higher.</p></div>
+        <div class="seo-card"><h3>Back-End DTI</h3><p>Housing + car loans + student loans + credit-card minimums divided by gross income. 43% is the QM ceiling; non-QM goes to 50%+.</p></div>
+        <div class="seo-card"><h3>Why two limits</h3><p>You can max your housing payment but still flunk back-end if non-housing debt is high. The tighter of the two is your actual ceiling.</p></div>
+        <div class="seo-card"><h3>Reserves</h3><p>Most agency programs want 2–6 months PITIA in the bank after closing. Non-QM jumbo can require 12–24.</p></div>
+      </div>
+    </div>
+
+    <!-- DSCR -->
+    <div class="seo-panel" id="seo-dscr" style="display:none;">
+      <h2>How to use the DSCR Calculator</h2>
+      <p>The Debt Service Coverage Ratio (DSCR) measures whether a rental property generates enough income to cover its debt obligations. Lenders use it to qualify investment property loans without requiring W-2s or tax returns.</p>
+      <p>To calculate your DSCR: divide the property's gross monthly rental income by its total monthly debt obligations (mortgage P&amp;I + taxes + insurance + HOA). A DSCR of 1.0 means the property exactly covers its debt. Above 1.0 means positive cash flow. United Trust Mortgage approves loans down to a 0.75 DSCR.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>DSCR Above 1.25</h3><p>Excellent cash flow. The property generates significantly more income than its debt obligations. Qualifies with virtually any DSCR lender at the best available rates.</p></div>
+        <div class="seo-card"><h3>DSCR 1.0 – 1.25</h3><p>Good cash flow. The property covers all its obligations and produces positive returns. Qualifies with most DSCR lenders including United Trust Mortgage.</p></div>
+        <div class="seo-card"><h3>DSCR 0.75 – 1.0</h3><p>Below break-even but still financeable. United Trust Mortgage accepts DSCRs as low as 0.75 — something most conventional lenders won't touch.</p></div>
+        <div class="seo-card"><h3>Short-Term Rentals</h3><p>For Airbnb and VRBO properties, use AirDNA's Rentalizer to get a data-driven income estimate before calculating your DSCR. STR income is harder to verify and varies by market.</p></div>
+      </div>
+    </div>
+
+    <!-- Cash Flow -->
+    <div class="seo-panel" id="seo-cashflow" style="display:none;">
+      <h2>How to use the Cash Flow Calculator</h2>
+      <p>DSCR tells you whether the rent covers the loan; cash flow tells you what's actually left after the realities of owning a rental — vacancy, management, and maintenance. A 1.25 DSCR can still cash-flow negative once those line items hit.</p>
+      <p>Use this tab to stress-test a deal beyond the lender's qualifying ratio. Plug in PITIA from the Mortgage tab, layer in the operating costs, and watch the monthly net swing positive or negative.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>Vacancy Factor</h3><p>5% = roughly 18 days/year unrented. Use 5–10% for stable LTRs; 15–25% for STRs in seasonal markets.</p></div>
+        <div class="seo-card"><h3>Repairs / CapEx</h3><p>The big-ticket items — roofs, HVAC, water heaters. A common rule is $200–$300/mo for SFRs; more for older homes or multi-units.</p></div>
+        <div class="seo-card"><h3>Property Management</h3><p>Typically 8–12% of gross rent for LTRs and 20–30% for STRs. If you self-manage, leave it at 0 — but include the value of your time.</p></div>
+        <div class="seo-card"><h3>Reading the Output</h3><p>Positive monthly cash flow is the goal. Annualize it and compare against your equity in the deal to estimate cash-on-cash return.</p></div>
+      </div>
+    </div>
+
+    <!-- BRRRR -->
+    <div class="seo-panel" id="seo-brrrr" style="display:none;">
+      <h2>How to use the BRRRR Calculator</h2>
+      <p>BRRRR — Buy, Rehab, Rent, Refinance, Repeat — is the playbook for recycling capital across rental deals. The calculator shows whether the cash-out refi will pull all of your purchase + rehab back out, leaving none of your equity stuck in the property.</p>
+      <p>The key inputs are the After-Repair Value (ARV) and the refi LTV your DSCR lender will allow. United Trust Mortgage caps DSCR cash-out at 75% LTV on most programs; plug that in and see what the deal returns.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>Total Project Cost</h3><p>Purchase + rehab + closing + holding. The all-in basis the refi has to cover for you to "BRRRR all the way."</p></div>
+        <div class="seo-card"><h3>Cash Left In Deal</h3><p>How much of your money stays parked after the refi closes. Zero or negative is the BRRRR ideal.</p></div>
+        <div class="seo-card"><h3>Cash Out</h3><p>If the refi exceeds your basis you walk with cash to redeploy. This requires a strong ARV and tight rehab budget.</p></div>
+        <div class="seo-card"><h3>Spread (ARV − All-In)</h3><p>The "forced equity" you created. Even if you don't pull all your cash out, this is the wealth built by the project.</p></div>
+      </div>
+    </div>
+
+    <!-- Refi -->
+    <div class="seo-panel" id="seo-refi" style="display:none;">
+      <h2>How to use the Refi Break-Even Calculator</h2>
+      <p>A refi makes sense when the monthly savings outrun the closing costs within your hold period. This tab divides the refi costs by the monthly payment drop to give you the break-even in months — and shows what you net after the first 12 months of payments.</p>
+      <p>If you're planning to sell or refi again before the break-even point, the math doesn't justify it. If you'll hold past it, every additional month is profit.</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>Closing Costs</h3><p>Typical refi costs run 2–5% of the loan. Lender credits, "no-cost" programs, and rolling costs into the balance change the calculus — model both versions.</p></div>
+        <div class="seo-card"><h3>Hold Period</h3><p>Compare your break-even months to how long you actually plan to keep the loan. If break-even is 36 months and you're selling in 24, skip it.</p></div>
+        <div class="seo-card"><h3>Cash-Out Refi</h3><p>If you're pulling equity, the break-even concept changes — the cash you take out at close is its own benefit beyond payment savings.</p></div>
+        <div class="seo-card"><h3>Rate vs Term</h3><p>Lower payment can come from a lower rate <em>or</em> a longer term. The latter saves cash today but adds total interest. The calculator agnostically uses your inputs.</p></div>
+      </div>
+    </div>
+
+    <!-- Buydown -->
+    <div class="seo-panel" id="seo-buydown" style="display:none;">
+      <h2>How to use the Buydown Calculator</h2>
+      <p>A temporary rate buydown lowers the borrower's payment for the first 1–2 years before reverting to the full note rate. The cost is paid up front — usually as a seller concession on a purchase — and held in an escrow that subsidizes the payment.</p>
+      <p>This tab estimates the year-1 and year-2 payments and the approximate total subsidy. Use it to size a seller concession ask, or to evaluate whether a buyer credit is best deployed as a buydown vs. a permanent rate buy-down (points).</p>
+      <div class="seo-grid">
+        <div class="seo-card"><h3>2-1 Buydown</h3><p>Year 1 payment at note − 2%. Year 2 at note − 1%. Year 3+ at note. Most common; biggest subsidy.</p></div>
+        <div class="seo-card"><h3>1-0 Buydown</h3><p>Year 1 payment at note − 1%. Year 2+ at note. Smaller subsidy, easier to negotiate as a concession.</p></div>
+        <div class="seo-card"><h3>Who Pays</h3><p>Most often the seller as a closing-cost concession. Sometimes the lender via a credit. Borrower-paid buydowns exist but rarely make sense vs. discount points.</p></div>
+        <div class="seo-card"><h3>If the Borrower Refis</h3><p>Unused subsidy is typically refunded toward principal. Keep the original good-faith buydown agreement on file.</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-logo" style="margin-bottom:4px;">
+          <img src="../assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img footer-logo-img">
+          <span>United Trust Mortgage</span>
+        </a>
+        <p>Nationwide mortgage brokerage specializing in Non-QM and specialty lending solutions for borrowers and investors.</p>
+        <div class="footer-apply-row">
+          <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Apply Now</a>
+          <a href="https://2591548.my1003app.com/1220456/register?POSAppLanguage=ES&time=1776372290661" target="_blank" rel="noopener" class="footer-lang-link">Español →</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="../blog/dscr.html">DSCR Loans</a>
+        <a href="../blog/bank-statement.html">Bank Statement</a>
+        <a href="../blog/pnl.html">P&L Loans</a>
+        <a href="../blog/asset-depletion.html">Asset Depletion</a>
+        <a href="../blog/conventional-fha-va.html">Conventional / FHA / VA</a>
+        <a href="../blog/jumbo.html">Jumbo Loans</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="../calculators/index.html">Calculators</a>
+        <a href="../analyze/index.html">Property Analyzer</a>
+        <a href="../str-outlook/index.html">STR Outlook</a>
+        <a href="../market-data/index.html">Market Data</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../team.html">Our Team</a>
+        <a href="../partners.html">Partners</a>
+        <a href="../index.html#process">How It Works</a>
+        <a href="../index.html#reviews">Testimonials</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:info@myunitedtrust.com">info@myunitedtrust.com</a>
+        <a href="tel:+1800000000">(800) 000-0000</a>
+        <a href="https://www.myunitedtrust.com" target="_blank" rel="noopener">www.myunitedtrust.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 United Trust Mortgage. All rights reserved. NMLS# 2591548. Equal Housing Lender.</span>
+      <div class="footer-legal">
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms</a>
+        <a href="../econsent.html">eConsent</a>
+        <a href="../wireless.html">Wireless Policy</a>
+        <a href="#">Licensing</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function fmtCents(n) {
+    if (!isFinite(n)) return '$0.00';
+    return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function switchTab(tab) {
+    const order = ['mortgage', 'afford', 'dscr', 'cashflow', 'brrrr', 'refi', 'buydown'];
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', order[i] === tab);
+    });
+    order.forEach(t => {
+      const panel = document.getElementById('panel-' + t);
+      if (panel) panel.classList.toggle('active', t === tab);
+      const seo = document.getElementById('seo-' + t);
+      if (seo) seo.style.display = t === tab ? 'block' : 'none';
+    });
+  }
+
+  function updateSliderFill(id, min, max) {
+    const el = document.getElementById(id);
+    const val = parseFloat(el.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    el.style.background = `linear-gradient(to right, var(--accent-gold) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+  }
+
+  function syncDown(source) {
+    const price = parseFloat(document.getElementById('m-price').value) || 0;
+    if (source === 'pct') {
+      const pct = parseFloat(document.getElementById('m-down-pct').value);
+      document.getElementById('m-down').value = Math.round(price * pct / 100);
+      document.getElementById('m-down-pct-label').textContent = pct + '%';
+    } else {
+      const down = parseFloat(document.getElementById('m-down').value) || 0;
+      const pct = price > 0 ? Math.round(down / price * 100) : 0;
+      document.getElementById('m-down-pct').value = Math.min(50, Math.max(15, pct));
+      document.getElementById('m-down-pct-label').textContent = pct + '%';
+    }
+    updateSliderFill('m-down-pct', 15, 50);
+  }
+
+  function syncRate() {
+    document.getElementById('m-rate').value = document.getElementById('m-rate-slider').value;
+    updateSliderFill('m-rate-slider', 5, 12);
+  }
+
+  function syncRateFromInput() {
+    const v = parseFloat(document.getElementById('m-rate').value) || 7.25;
+    document.getElementById('m-rate-slider').value = Math.min(12, Math.max(5, v));
+    updateSliderFill('m-rate-slider', 5, 12);
+  }
+
+  function piPayment(loan, annualRate, years) {
+    if (loan <= 0 || years <= 0) return 0;
+    const r = annualRate / 100 / 12;
+    const n = years * 12;
+    if (r === 0) return loan / n;
+    return loan * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n)-1);
+  }
+  function loanFromPayment(targetPI, annualRate, years) {
+    if (targetPI <= 0 || years <= 0) return 0;
+    const r = annualRate / 100 / 12;
+    const n = years * 12;
+    if (r === 0) return targetPI * n;
+    return targetPI * (Math.pow(1+r,n) - 1) / (r * Math.pow(1+r,n));
+  }
+
+  function calcMortgage() {
+    const price = parseFloat(document.getElementById('m-price').value) || 0;
+    const down = parseFloat(document.getElementById('m-down').value) || 0;
+    const rate = parseFloat(document.getElementById('m-rate').value) || 0;
+    const term = parseFloat(document.getElementById('m-term').value) || 30;
+    const tax = parseFloat(document.getElementById('m-tax').value) || 0;
+    const ins = parseFloat(document.getElementById('m-ins').value) || 0;
+    const hoa = parseFloat(document.getElementById('m-hoa').value) || 0;
+    const pmi = parseFloat(document.getElementById('m-pmi').value) || 0;
+
+    const loan = Math.max(price - down, 0);
+    const pi = piPayment(loan, rate, term);
+    const taxMo = tax / 12;
+    const insMo = ins / 12;
+    const total = pi + taxMo + insMo + hoa + pmi;
+    const n = term * 12;
+    const totalInt = (pi * n) - loan;
+
+    document.getElementById('m-total').textContent = fmt(total);
+    document.getElementById('m-pi').textContent = fmt(pi);
+    document.getElementById('m-tax-mo').textContent = fmt(taxMo);
+    document.getElementById('m-ins-mo').textContent = fmt(insMo);
+    document.getElementById('m-hoa-mo').textContent = fmt(hoa);
+    document.getElementById('m-pmi-mo').textContent = fmt(pmi);
+    document.getElementById('m-loan').textContent = fmt(loan);
+    document.getElementById('m-int-total').textContent = fmt(totalInt);
+
+    syncDown('amount');
+    document.getElementById('d-mortgage').value = Math.round(pi);
+    document.getElementById('d-tax').value = Math.round(taxMo);
+    document.getElementById('d-ins').value = Math.round(insMo);
+    calcDSCR();
+  }
+
+  function calcAfford() {
+    const annualIncome = parseFloat(document.getElementById('a-income').value) || 0;
+    const monthlyDebt = parseFloat(document.getElementById('a-debt').value) || 0;
+    const down = parseFloat(document.getElementById('a-down').value) || 0;
+    const rate = parseFloat(document.getElementById('a-rate').value) || 0;
+    const term = parseFloat(document.getElementById('a-term').value) || 30;
+    const front = parseFloat(document.getElementById('a-front').value) || 0;
+    const back = parseFloat(document.getElementById('a-back').value) || 0;
+    const taxRate = parseFloat(document.getElementById('a-tax-rate').value) || 0;
+    const insAnnual = parseFloat(document.getElementById('a-ins').value) || 0;
+    const hoa = parseFloat(document.getElementById('a-hoa').value) || 0;
+    const pmi = parseFloat(document.getElementById('a-pmi').value) || 0;
+
+    const monthlyIncome = annualIncome / 12;
+    const maxByFront = monthlyIncome * front / 100;
+    const maxByBack = Math.max(monthlyIncome * back / 100 - monthlyDebt, 0);
+    const maxHousing = Math.max(Math.min(maxByFront, maxByBack), 0);
+
+    const insMo = insAnnual / 12;
+    const taxRateMo = taxRate / 100 / 12;
+
+    // Iterate: tax depends on price, price depends on loan (which depends on PI = housing - tax - ins - hoa - pmi)
+    let price = down;
+    for (let i = 0; i < 40; i++) {
+      const taxes = price * taxRateMo;
+      const targetPI = maxHousing - taxes - insMo - hoa - pmi;
+      const loan = loanFromPayment(targetPI, rate, term);
+      const newPrice = Math.max(loan + down, down);
+      if (Math.abs(newPrice - price) < 1) { price = newPrice; break; }
+      price = newPrice;
+    }
+
+    const loan = Math.max(price - down, 0);
+    const pi = piPayment(loan, rate, term);
+    const taxes = price * taxRateMo;
+    const totalPayment = pi + taxes + insMo + hoa + pmi;
+    const otherCosts = insMo + hoa + pmi;
+    const actualFront = monthlyIncome > 0 ? totalPayment / monthlyIncome * 100 : 0;
+    const actualBack = monthlyIncome > 0 ? (totalPayment + monthlyDebt) / monthlyIncome * 100 : 0;
+
+    document.getElementById('a-price').textContent = fmt(price);
+    document.getElementById('a-loan').textContent = fmt(loan);
+    document.getElementById('a-total').textContent = fmtCents(totalPayment);
+    document.getElementById('a-pi').textContent = fmtCents(pi);
+    document.getElementById('a-taxes').textContent = fmtCents(taxes);
+    document.getElementById('a-other').textContent = fmtCents(otherCosts);
+    document.getElementById('a-mo-income').textContent = fmtCents(monthlyIncome);
+    document.getElementById('a-dti').textContent = actualFront.toFixed(1) + '% / ' + actualBack.toFixed(1) + '%';
+
+    const badge = document.getElementById('afford-badge');
+    const headroom = document.getElementById('afford-headroom');
+    const desc = document.getElementById('afford-desc');
+    headroom.textContent = fmt(price);
+    if (price <= down) {
+      badge.className = 'dscr-badge bad';
+      desc.textContent = 'Income or DTI is too low to qualify above your down payment. Reduce monthly debt or increase income.';
+    } else if (maxByFront < maxByBack) {
+      badge.className = 'dscr-badge warn';
+      desc.textContent = 'Housing DTI is the binding constraint. A larger down payment or longer term will lift the cap.';
+    } else {
+      badge.className = 'dscr-badge good';
+      desc.textContent = 'Total DTI is the binding constraint. Paying down non-housing debt would expand your buying power.';
+    }
+  }
+
+  function toggleSTR() {
+    const isSTR = document.getElementById('str-toggle').checked;
+    document.getElementById('str-notice').classList.toggle('visible', isSTR);
+    document.getElementById('income-label').textContent = isSTR ? 'Monthly STR Revenue (from AirDNA)' : 'Monthly Gross Rental Income';
+  }
+
+  function calcDSCR() {
+    const income = parseFloat(document.getElementById('d-income').value) || 0;
+    const mortgage = parseFloat(document.getElementById('d-mortgage').value) || 0;
+    const tax = parseFloat(document.getElementById('d-tax').value) || 0;
+    const ins = parseFloat(document.getElementById('d-ins').value) || 0;
+    const hoa = parseFloat(document.getElementById('d-hoa').value) || 0;
+
+    const totalDebt = mortgage + tax + ins + hoa;
+    const cashflow = income - totalDebt;
+    const dscr = totalDebt > 0 ? income / totalDebt : 0;
+
+    document.getElementById('d-gross').textContent = fmt(income);
+    document.getElementById('d-debt').textContent = fmt(totalDebt);
+
+    const cfEl = document.getElementById('d-cashflow');
+    cfEl.textContent = (cashflow >= 0 ? '+' : '') + fmt(cashflow);
+    cfEl.style.color = cashflow >= 0 ? '#4ADE80' : '#e07b70';
+    document.getElementById('d-annual').textContent = (cashflow*12 >= 0 ? '+' : '') + fmt(cashflow*12);
+
+    const badge = document.getElementById('dscr-badge');
+    const score = document.getElementById('dscr-score');
+    const desc = document.getElementById('dscr-desc');
+
+    if (dscr === 0) { score.textContent = ','; badge.className = 'dscr-badge'; desc.textContent = 'Enter your numbers above'; return; }
+
+    score.textContent = dscr.toFixed(2);
+    if (dscr >= 1.25) { badge.className = 'dscr-badge good'; desc.textContent = 'Excellent. Strong cash flow. Qualifies with most DSCR lenders.'; }
+    else if (dscr >= 1.0) { badge.className = 'dscr-badge warn'; desc.textContent = 'Good. Property covers its debt. Qualifies with United Trust Mortgage.'; }
+    else if (dscr >= 0.75) { badge.className = 'dscr-badge warn'; desc.textContent = 'Below 1.0. We accept DSCRs down to 0.75. You may still qualify.'; }
+    else { badge.className = 'dscr-badge bad'; desc.textContent = 'Below our 0.75 minimum. Try a higher down payment or lower purchase price.'; }
+  }
+
+  // ── Cash Flow ──
+  function calcCashflow() {
+    const rent     = parseFloat(document.getElementById('cf-rent').value)     || 0;
+    const pitia    = parseFloat(document.getElementById('cf-pitia').value)    || 0;
+    const vacancy  = parseFloat(document.getElementById('cf-vacancy').value)  || 0;
+    const repairs  = parseFloat(document.getElementById('cf-repairs').value)  || 0;
+    const mgmt     = parseFloat(document.getElementById('cf-mgmt').value)     || 0;
+
+    const vacancyLoss = rent * vacancy / 100;
+    const mgmtFee = rent * mgmt / 100;
+    const net = rent - vacancyLoss - mgmtFee - repairs - pitia;
+
+    document.getElementById('cf-net').textContent          = (net >= 0 ? '+' : '') + fmt(net);
+    document.getElementById('cf-net').style.color          = net >= 0 ? '#5fb89a' : '#e07b70';
+    document.getElementById('cf-annual').textContent       = (net >= 0 ? '+' : '') + fmt(net * 12);
+    document.getElementById('cf-vacancy-loss').textContent = fmt(vacancyLoss);
+    document.getElementById('cf-mgmt-fee').textContent     = fmt(mgmtFee);
+    document.getElementById('cf-repairs-mo').textContent   = fmt(repairs);
+  }
+
+  // ── BRRRR ──
+  function calcBrrrr() {
+    const purchase = parseFloat(document.getElementById('br-purchase').value) || 0;
+    const rehab    = parseFloat(document.getElementById('br-rehab').value)    || 0;
+    const arv      = parseFloat(document.getElementById('br-arv').value)      || 0;
+    const ltv      = parseFloat(document.getElementById('br-ltv').value)      || 0;
+    const closing  = parseFloat(document.getElementById('br-closing').value)  || 0;
+    const holding  = parseFloat(document.getElementById('br-holding').value)  || 0;
+
+    const totalCost = purchase + rehab + closing + holding;
+    const refiLoan  = arv * ltv / 100;
+    const cashLeft  = Math.max(totalCost - refiLoan, 0);
+    const cashOut   = Math.max(refiLoan - totalCost, 0);
+    const equity    = arv - refiLoan;
+    const spread    = arv - totalCost;
+
+    document.getElementById('br-cashout').textContent  = fmt(cashOut);
+    document.getElementById('br-total').textContent    = fmt(totalCost);
+    document.getElementById('br-loan').textContent     = fmt(refiLoan);
+    document.getElementById('br-cashleft').textContent = fmt(cashLeft);
+    document.getElementById('br-equity').textContent   = fmt(equity);
+    document.getElementById('br-spread').textContent   = (spread >= 0 ? '+' : '') + fmt(spread);
+  }
+
+  // ── Refi Break-Even ──
+  function calcRefi() {
+    const oldPay   = parseFloat(document.getElementById('rf-old').value)     || 0;
+    const newPay   = parseFloat(document.getElementById('rf-new').value)     || 0;
+    const costs    = parseFloat(document.getElementById('rf-costs').value)   || 0;
+    const cashout  = parseFloat(document.getElementById('rf-cashout').value) || 0;
+
+    const savings = oldPay - newPay;
+    const months  = savings > 0 ? costs / savings : Infinity;
+    const net12   = savings * 12 - costs;
+
+    document.getElementById('rf-savings').textContent    = (savings >= 0 ? '+' : '') + fmt(savings);
+    document.getElementById('rf-be').textContent         = isFinite(months) ? months.toFixed(1) + ' mo (' + (months/12).toFixed(2) + ' yr)' : '—';
+    document.getElementById('rf-net12').textContent      = (net12 >= 0 ? '+' : '') + fmt(net12);
+    document.getElementById('rf-cashout-out').textContent = fmt(cashout);
+  }
+
+  // ── Buydown ──
+  let bdType = 2;
+  function setBuydown(type) {
+    bdType = type;
+    document.querySelectorAll('.bd-type-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.type) === type));
+    calcBuydown();
+  }
+  function calcBuydown() {
+    const loan = parseFloat(document.getElementById('bd-loan').value) || 0;
+    const rate = parseFloat(document.getElementById('bd-rate').value) || 0;
+    const term = parseFloat(document.getElementById('bd-term').value) || 30;
+
+    const full = piPayment(loan, rate, term);
+    const y1Rate = Math.max(rate - bdType, 0);
+    const y2Rate = bdType === 2 ? Math.max(rate - 1, 0) : rate;
+    const y1 = piPayment(loan, y1Rate, term);
+    const y2 = piPayment(loan, y2Rate, term);
+    const y1Savings = Math.max(full - y1, 0) * 12;
+    const y2Savings = Math.max(full - y2, 0) * 12;
+    const total = y1Savings + y2Savings;
+
+    document.getElementById('bd-cost').textContent   = fmt(total);
+    document.getElementById('bd-full').textContent   = fmt(full);
+    document.getElementById('bd-y1').textContent     = fmt(y1);
+    document.getElementById('bd-y2').textContent     = fmt(y2);
+    document.getElementById('bd-y1rate').textContent = y1Rate.toFixed(3) + '%';
+    document.getElementById('bd-y2rate').textContent = bdType === 2 ? (y2Rate.toFixed(3) + '%') : 'Note rate';
+  }
+
+  calcMortgage();
+  calcAfford();
+  calcDSCR();
+  calcCashflow();
+  calcBrrrr();
+  calcRefi();
+  calcBuydown();
+  updateSliderFill('m-down-pct', 15, 50);
+  updateSliderFill('m-rate-slider', 5, 12);
+</script>
+
+<script>
+  const mt = document.getElementById('mobileToggle');
+  const mm = document.getElementById('mobileMenu');
+  if (mt && mm) {
+    mt.addEventListener('click', () => mm.classList.toggle('active'));
+    mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('active')));
+  }
+</script>
+</body>
+</html>

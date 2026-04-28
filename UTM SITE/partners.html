@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Partners — United Trust Mortgage</title>
+<meta name="description" content="A toolkit for realtor partners. Generate branded marketing flyers (open house, just funded, loan programs) with United Trust Mortgage.">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  /* ===== Partners hero ===== */
+  .partners-hero {
+    padding: calc(var(--nav-height) + 80px) 0 50px;
+    background:
+      radial-gradient(1200px 400px at 50% 0%, rgba(201, 169, 97, 0.08), transparent 60%),
+      var(--primary-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .partners-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201, 169, 97, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201, 169, 97, 0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 20%, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 20%, black 30%, transparent 80%);
+    pointer-events: none;
+  }
+  .partners-hero-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: end;
+  }
+  .partners-hero h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    color: var(--white);
+    margin-top: 18px;
+    text-wrap: balance;
+  }
+  .partners-hero h1 em { font-style: italic; color: var(--accent-gold); }
+  .partners-hero p {
+    font-size: 1.05rem;
+    color: var(--gray-400);
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent-gold);
+  }
+  .eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.18);
+  }
+
+  /* ===== Resource shell ===== */
+  .partners-shell { padding: 0 0 120px; background: var(--primary-dark); }
+  .partners-shell-inner { max-width: var(--container-max); margin: 0 auto; padding: 0 24px; }
+
+  /* Sticky resource nav */
+  .resource-nav {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 30;
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px;
+    background: rgba(11, 20, 16, 0.92);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    margin: 0 -24px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .resource-nav::-webkit-scrollbar { display: none; }
+  .resource-nav-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .resource-nav-inner::before {
+    content: 'Resources';
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    padding-right: 18px;
+    margin-right: 8px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .res-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 2px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gray-300);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid transparent;
+    flex-shrink: 0;
+    background: transparent;
+  }
+  .res-tab:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .res-tab.active {
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    border-color: var(--accent-gold);
+  }
+  .res-tab .ico { font-size: 0.88rem; opacity: 0.85; }
+  .res-tab.coming { opacity: 0.5; cursor: not-allowed; }
+  .res-tab.coming:hover { background: transparent; color: var(--gray-300); }
+  .res-tab.coming .pill {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.06);
+    color: var(--gray-400);
+    margin-left: 4px;
+  }
+
+  .resource { display: none; animation: partFadeUp .35s ease; }
+  .resource.active { display: block; }
+  @keyframes partFadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Resource head */
+  .resource-head {
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .resource-head-left { max-width: 640px; }
+  .resource-head .eyebrow { margin-bottom: 12px; }
+  .resource-head h2 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    color: var(--white);
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+  .resource-head h2 em { font-style: italic; color: var(--accent-gold); }
+  .resource-head p { color: var(--gray-300); font-size: 1rem; line-height: 1.6; max-width: 620px; }
+
+  /* Flyer type bar */
+  .flyer-type-bar {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    max-width: fit-content;
+  }
+  .flyer-type-btn {
+    padding: 10px 18px;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gray-300);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+  }
+  .flyer-type-btn:hover { color: var(--white); }
+  .flyer-type-btn.active {
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    }
+  .flyer-type-btn .ico { font-size: 0.88rem; opacity: 0.85; }
+
+  /* Two-col layout */
+  .generator { display: grid; grid-template-columns: 1fr 440px; gap: 24px; align-items: start; }
+  @media (max-width: 1100px) { .generator { grid-template-columns: 1fr; } }
+  .gen-left { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .gen-right { position: sticky; top: calc(var(--nav-height) + 80px); }
+  @media (max-width: 1100px) { .gen-right { position: static; } }
+
+  /* Card panel */
+  .panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+  }
+  .panel-head {
+    padding: 16px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: rgba(255,255,255,0.02);
+  }
+  .panel-head-l { display: flex; align-items: center; gap: 12px; }
+  .panel-head-num {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .panel-head h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--white);
+  }
+  .panel-head-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: rgba(74,222,128,0.1);
+    color: var(--emerald-bright);
+    border: 1px solid rgba(74,222,128,0.2);
+    font-weight: 600;
+  }
+  .panel-head-pill.warm {
+    background: rgba(201, 169, 97, 0.1);
+    color: var(--accent-gold);
+    border-color: rgba(201, 169, 97, 0.25);
+  }
+  .panel-body { padding: 22px; }
+
+  /* Brand toggle */
+  .brand-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 6px;
+    background: rgba(11, 20, 16, 0.6);
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .brand-opt {
+    padding: 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    color: var(--white);
+  }
+  .brand-opt:hover { background: rgba(255,255,255,0.04); }
+  .brand-opt.active {
+    background: var(--secondary-dark);
+    border-color: rgba(201, 169, 97, 0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .brand-opt-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all var(--transition-fast);
+    background: rgba(11, 20, 16, 0.6);
+  }
+  .brand-opt.active .brand-opt-radio {
+    border-color: var(--accent-gold);
+    background: var(--accent-gold);
+  }
+  .brand-opt.active .brand-opt-radio::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-dark);
+  }
+  .brand-opt-title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--white);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .brand-opt-sub { font-size: 0.78rem; color: var(--gray-400); line-height: 1.4; }
+
+  /* Form grid */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .fg { display: flex; flex-direction: column; gap: 6px; }
+  .fg.full { grid-column: 1 / -1; }
+  .fg label {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    font-weight: 600;
+  }
+  .fg input[type=text],
+  .fg input[type=email],
+  .fg input[type=tel],
+  .fg input[type=number],
+  .fg select,
+  .fg textarea {
+    width: 100%;
+    padding: 10px 13px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    background: rgba(11, 20, 16, 0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 9px;
+    color: var(--white);
+    outline: none;
+    transition: border-color var(--transition-fast);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--accent-gold); }
+  .fg input::placeholder, .fg textarea::placeholder { color: var(--gray-500); }
+  .fg textarea { resize: vertical; min-height: 72px; }
+  @media (max-width: 640px) { .form-grid, .form-grid.three { grid-template-columns: 1fr; } }
+
+  /* Upload drop */
+  .upload-drop {
+    border: 1.5px dashed rgba(201, 169, 97, 0.2);
+    border-radius: 2px;
+    padding: 22px;
+    background: rgba(11, 20, 16, 0.5);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+  }
+  .upload-drop:hover { border-color: var(--accent-gold); background: rgba(11, 20, 16, 0.7); }
+  .upload-drop.has-file {
+    border-style: solid;
+    border-color: var(--emerald-bright);
+    padding: 14px;
+    text-align: left;
+  }
+  .upload-drop input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    width: 100%; height: 100%;
+  }
+  .upload-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(201, 169, 97, 0.1);
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 1.05rem;
+    color: var(--accent-gold);
+  }
+  .upload-title { font-size: 0.85rem; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+  .upload-sub { font-size: 0.72rem; color: var(--gray-500); }
+  .upload-preview { display: flex; align-items: center; gap: 14px; }
+  .upload-preview-img {
+    width: 56px; height: 56px;
+    border-radius: 2px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .upload-preview-info { flex: 1; min-width: 0; }
+  .upload-preview-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .upload-preview-meta {
+    font-size: 0.7rem;
+    color: var(--emerald-bright);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .upload-preview-meta::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--emerald-bright);
+  }
+  .upload-remove {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    border: none;
+  }
+  .upload-remove:hover { background: rgba(224,123,112,0.15); color: #e07b70; }
+
+  /* Co-brand card */
+  .cobrand-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--secondary-dark);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+  }
+  .cobrand-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--charcoal);
+    box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.18);
+  }
+  .cobrand-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .cobrand-info { flex: 1; min-width: 0; }
+  .cobrand-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+  .cobrand-role { font-size: 0.78rem; color: var(--gray-400); margin-bottom: 6px; }
+  .cobrand-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.7rem;
+    color: var(--gray-500);
+  }
+  .cobrand-lock {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--emerald-bright);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: rgba(74,222,128,0.1);
+    border-radius: 99px;
+    border: 1px solid rgba(74,222,128,0.2);
+    flex-shrink: 0;
+    align-self: flex-start;
+    font-weight: 600;
+  }
+
+  /* Loan chip grid */
+  .loan-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 900px) { .loan-chips { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .loan-chips { grid-template-columns: 1fr; } }
+  .loan-chip-p {
+    padding: 14px 16px;
+    border-radius: 2px;
+    background: rgba(11, 20, 16, 0.6);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: left;
+    position: relative;
+    color: var(--white);
+  }
+  .loan-chip-p:hover { border-color: rgba(201, 169, 97, 0.25); background: var(--secondary-dark); }
+  .loan-chip-p.selected {
+    border-color: var(--accent-gold);
+    background: var(--secondary-dark);
+    }
+  .loan-chip-p.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .loan-chip-p .lc-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .loan-chip-p .lc-ico {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: rgba(201, 169, 97, 0.1);
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+  }
+  .loan-chip-p .lc-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--white);
+  }
+  .loan-chip-p .lc-sub { font-size: 0.72rem; color: var(--gray-400); line-height: 1.4; }
+
+  /* NonQM category label */
+  .category-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin: 12px 0 8px;
+    font-weight: 600;
+  }
+  .category-label:first-child { margin-top: 0; }
+  .category-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .category-label .pill {
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: rgba(201, 169, 97, 0.1);
+    color: var(--accent-gold);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Theme swatches */
+  .theme-swatches { display: none; }
+  /* Editorial / Deal Tape toggle */
+  .template-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .tpl-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: rgba(11,20,16,0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    color: var(--bone);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+  .tpl-opt:hover { border-color: rgba(201,169,97,0.4); }
+  .tpl-opt.selected {
+    border-color: var(--accent-gold);
+    background: rgba(201,169,97,0.06);
+    position: relative;
+  }
+  .tpl-opt.selected::before, .tpl-opt.selected::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    pointer-events: none;
+  }
+  .tpl-opt.selected::before {
+    top: -1px; left: -1px;
+    border-top: 1px solid var(--accent-gold);
+    border-left: 1px solid var(--accent-gold);
+  }
+  .tpl-opt.selected::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1px solid var(--accent-gold);
+    border-right: 1px solid var(--accent-gold);
+  }
+  .tpl-chip {
+    width: 38px; height: 38px;
+    border: 1px solid var(--glass-border);
+    flex-shrink: 0;
+  }
+  .tpl-chip.dark {
+    background:
+      radial-gradient(ellipse 30px 18px at 80% 30%, rgba(31,91,74,0.5) 0%, transparent 60%),
+      #0b1410;
+  }
+  .tpl-chip.light {
+    background:
+      linear-gradient(180deg, #f4f1e8 0%, #f4f1e8 30%, #fff 30%, #fff 100%);
+    border-color: rgba(11,20,16,0.18);
+  }
+  .tpl-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .tpl-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-top: 4px;
+  }
+  .theme-swatch {
+    width: 42px; height: 42px;
+    border-radius: 2px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+  }
+  .theme-swatch:hover { transform: scale(1.06); }
+  .theme-swatch.selected { border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(201, 169, 97, 0.25); }
+  .theme-swatch.selected::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  /* Action bar */
+  .action-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    bottom: 20px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .action-bar-left { flex: 1; font-size: 0.85rem; color: var(--gray-300); min-width: 200px; }
+  .action-bar-left strong { color: var(--white); font-weight: 600; }
+
+  .btn-gen {
+    padding: 12px 22px;
+    background: var(--secondary-dark);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+  .btn-gen:hover { border-color: var(--accent-gold); color: var(--accent-gold); transform: translateY(-1px); }
+  .btn-gen.amber {
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    border-color: var(--accent-gold);
+  }
+  .btn-gen.amber:hover { color: var(--primary-dark); }
+
+  .btn-sec {
+    padding: 12px 18px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gray-300);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+  .btn-sec:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+  /* Preview pane */
+  .preview-wrap {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+  }
+  .preview-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .preview-head-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .preview-head-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--emerald-bright);
+    box-shadow: 0 0 0 3px rgba(74,222,128,0.18);
+  }
+  .preview-head-actions { display: flex; gap: 6px; }
+  .btn-dl {
+    padding: 7px 13px;
+    background: rgba(11, 20, 16, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-dl:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .btn-dl.primary {
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    border-color: var(--accent-gold);
+  }
+  .btn-dl.primary:hover { color: var(--primary-dark); }
+
+  .preview-canvas-wrap {
+    padding: 24px;
+    background: repeating-linear-gradient(
+      45deg, rgba(255,255,255,0.02) 0 12px, rgba(255,255,255,0.04) 12px 24px
+    );
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 580px;
+  }
+  /* Outer frame that visually constrains the scaled-down preview */
+  .flyer-canvas-frame {
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 8.5 / 11;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.55);
+    background: #FFFFFF;
+    position: relative;
+  }
+  /* Native US Letter at 96dpi — html2canvas captures this resolution */
+  .flyer-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 816px;
+    height: 1056px;
+    transform: scale(calc(100% / 816 * 560 / 100));
+    transform-origin: top left;
+    background: #FFFFFF;
+    color: #1a2636;
+    font-family: var(--font-main);
+    overflow: hidden;
+  }
+  /* Fallback — if calc() in transform isn't supported, fall back to fixed */
+  @supports not (transform: scale(calc(100% / 816 * 560 / 100))) {
+    .flyer-canvas { transform: scale(0.6863); }
+  }
+  /* Responsive scale: when frame width drops below 560, scale shrinks */
+  @media (max-width: 600px) {
+    .flyer-canvas-frame { max-width: 100%; }
+    .flyer-canvas { transform: scale(0.42); }
+  }
+  .flyer-canvas > * {
+    width: 100%;
+    height: 100%;
+    min-height: 0 !important;
+  }
+
+  .preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 30px;
+    gap: 12px;
+    color: var(--gray-400);
+  }
+  .preview-placeholder .ph-icon {
+    width: 54px; height: 54px;
+    border-radius: 2px;
+    background: rgba(201, 169, 97, 0.08);
+    border: 1px solid rgba(201, 169, 97, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+  }
+  .preview-placeholder p { font-size: 0.85rem; line-height: 1.55; max-width: 240px; }
+
+  /* Notification */
+  .partner-notif {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-dark);
+    color: var(--white);
+    padding: 12px 22px;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    animation: notifSlideUp .3s ease;
+  }
+  .partner-notif.visible { display: inline-flex; }
+  .partner-notif .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-gold); }
+  @keyframes notifSlideUp {
+    from { opacity: 0; transform: translate(-50%, 12px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* Coming-soon cards */
+  .coming-soon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+  }
+  @media (max-width: 900px) { .coming-soon-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .coming-soon-grid { grid-template-columns: 1fr; } }
+  .coming-card {
+    padding: 24px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .coming-card::before {
+    content: 'Coming soon';
+    position: absolute;
+    top: 14px; right: 14px;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 99px;
+    background: rgba(201, 169, 97, 0.1);
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+  .coming-card-ico { display: none; }
+  .coming-card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .coming-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--bone);
+    margin-bottom: 8px;
+    line-height: 1.15;
+  }
+  .coming-card h4 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent-gold);
+  }
+  .coming-card p { font-size: 0.88rem; color: var(--gray-300); line-height: 1.6; }
+</style>
+</head>
+<body data-page="partners">
+
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img">
+      <span>United Trust</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#programs">Programs</a>
+      <div class="nav-dropdown">
+        <a href="#" class="nav-dropdown-toggle">Tools <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+        <div class="nav-dropdown-menu">
+          <a href="calculators/index.html">Calculators</a>
+          <a href="analyze/index.html">Property Analyzer</a>
+          <a href="str-outlook/index.html">STR Outlook</a>
+          <a href="market-data/index.html">Market Data</a>
+        </div>
+      </div>
+      <a href="blog/index.html">Blog</a>
+      <a href="team.html">Team</a>
+      <a href="partners.html">Partners</a>
+    </div>
+    <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta">Apply Now</a>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#programs">Programs</a>
+  <a href="calculators/index.html">Calculators</a>
+  <a href="analyze/index.html">Property Analyzer</a>
+  <a href="str-outlook/index.html">STR Outlook</a>
+  <a href="market-data/index.html">Market Data</a>
+  <a href="blog/index.html">Blog</a>
+  <a href="team.html">Team</a>
+  <a href="partners.html">Partners</a>
+  <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:12px;text-align:center;">Apply Now</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="partners-hero" data-screen-label="Partners Hero">
+  <div class="partners-hero-inner">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> For realtor partners</div>
+      <h1>A toolkit built for <em>your</em> listings.</h1>
+    </div>
+    <p>Branded or co-branded flyers — open house, just funded, and program one-pagers. Built to ship, not to convert.</p>
+  </div>
+</section>
+
+<!-- ============ RESOURCE SHELL ============ -->
+<section class="partners-shell" data-screen-label="Partners Shell">
+  <div class="partners-shell-inner">
+
+    <!-- Sticky resource tabs (expandable) -->
+    <nav class="resource-nav" aria-label="Partner resources">
+      <div class="resource-nav-inner">
+        <button class="res-tab active" data-resource="flyers">
+          Flyer Generator
+        </button>
+        <button class="res-tab coming" disabled>
+          Pricing Scenarios <span class="pill">Soon</span>
+        </button>
+        <button class="res-tab coming" disabled>
+          Pre-Approval Kit <span class="pill">Soon</span>
+        </button>
+        <button class="res-tab coming" disabled>
+          Program Guides <span class="pill">Soon</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== RESOURCE: FLYER GENERATOR ===== -->
+    <div class="resource active" data-resource="flyers">
+
+      <header class="resource-head">
+        <div class="resource-head-left">
+          <div class="eyebrow"><span class="dot"></span> Resource 01 · Flyer Generator</div>
+          <h2>Marketing flyers, <em>ready in minutes.</em></h2>
+          <p>Fill in your details once — we'll remember them next time. Pick a flyer type, add the specifics, and export a polished PNG or PDF ready for email, print, or social.</p>
+        </div>
+      </header>
+
+      <!-- Flyer type selector -->
+      <div class="flyer-type-bar" role="tablist" aria-label="Flyer type">
+        <button class="flyer-type-btn active" data-flyer="open-house" role="tab">
+          Open House
+        </button>
+        <button class="flyer-type-btn" data-flyer="just-funded" role="tab">
+          Just Funded
+        </button>
+        <button class="flyer-type-btn" data-flyer="loan-programs" role="tab">
+          Loan Programs
+        </button>
+      </div>
+
+      <!-- Generator grid -->
+      <div class="generator">
+
+        <!-- LEFT: form panels -->
+        <div class="gen-left">
+
+          <!-- 1. Branding mode -->
+          <section class="panel">
+            <header class="panel-head">
+              <div class="panel-head-l">
+                <span class="panel-head-num">01</span>
+                <h3>Branding</h3>
+              </div>
+              <span class="panel-head-pill" id="brandStatusPill">Solo</span>
+            </header>
+            <div class="panel-body">
+              <div class="brand-toggle" role="radiogroup" aria-label="Branding mode">
+                <button class="brand-opt active" data-brand="solo" role="radio" aria-checked="true">
+                  <span class="brand-opt-radio"></span>
+                  <div>
+                    <div class="brand-opt-title">Solo branding</div>
+                    <div class="brand-opt-sub">Only your info and headshot appear on the flyer.</div>
+                  </div>
+                </button>
+                <button class="brand-opt" data-brand="co" role="radio" aria-checked="false">
+                  <span class="brand-opt-radio"></span>
+                  <div>
+                    <div class="brand-opt-title">Co-brand with Arin</div>
+                    <div class="brand-opt-sub">Arin's info and headshot are added automatically.</div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Co-brand reveal -->
+              <div id="cobrandReveal" style="display:none; margin-top:14px;">
+                <div class="cobrand-card">
+                  <div class="cobrand-avatar">
+                    <img src="assets/arin-headshot.jpg" alt="Arin Baghermian"/>
+                  </div>
+                  <div class="cobrand-info">
+                    <div class="cobrand-name">Arin Baghermian</div>
+                    <div class="cobrand-role">Mortgage Broker · NMLS #1220456</div>
+                    <div class="cobrand-meta">
+                      <span>818.447.7705</span>
+                      <span>arin@myunitedtrust.com</span>
+                      <span>myunitedtrust.com</span>
+                    </div>
+                  </div>
+                  <div class="cobrand-lock">Auto-filled</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Partner info -->
+          <section class="panel">
+            <header class="panel-head">
+              <div class="panel-head-l">
+                <span class="panel-head-num">02</span>
+                <h3>Your information</h3>
+              </div>
+              <span class="panel-head-pill warm" id="partnerSavedPill" style="display:none;">Saved</span>
+            </header>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="fg"><label for="pFirst">First name</label><input type="text" id="pFirst" placeholder="Jane"/></div>
+                <div class="fg"><label for="pLast">Last name</label><input type="text" id="pLast" placeholder="Doe"/></div>
+                <div class="fg"><label for="pEmail">Email</label><input type="email" id="pEmail" placeholder="jane@agency.com"/></div>
+                <div class="fg"><label for="pPhone">Phone</label><input type="tel" id="pPhone" placeholder="(555) 123-4567"/></div>
+                <div class="fg"><label for="pLicense">License #</label><input type="text" id="pLicense" placeholder="DRE 01234567"/></div>
+                <div class="fg"><label for="pCompany">Company</label><input type="text" id="pCompany" placeholder="Premier Realty"/></div>
+                <div class="fg"><label for="pWebsite">Company website</label><input type="text" id="pWebsite" placeholder="premierrealty.com"/></div>
+                <div class="fg"><label for="pCompanyLic">Company license #</label><input type="text" id="pCompanyLic" placeholder="DRE 12345678"/></div>
+                <div class="fg full"><label>Headshot</label>
+                  <div class="upload-drop" id="pHeadshotDrop">
+                    <input type="file" id="pHeadshotInput" accept="image/*"/>
+                    <div class="upload-drop-empty">
+                      <div class="upload-title">Upload your headshot</div>
+                      <div class="upload-sub">JPG or PNG · square works best</div>
+                    </div>
+                    <div class="upload-preview" style="display:none;">
+                      <img class="upload-preview-img" alt=""/>
+                      <div class="upload-preview-info">
+                        <div class="upload-preview-name"></div>
+                        <div class="upload-preview-meta">Ready to use</div>
+                      </div>
+                      <button type="button" class="upload-remove" data-remove="pHeadshot" aria-label="Remove">✕</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Flyer-specific fields — filled per type -->
+          <section class="panel" id="fieldsPanel">
+            <header class="panel-head">
+              <div class="panel-head-l">
+                <span class="panel-head-num">03</span>
+                <h3 id="fieldsPanelTitle">Open House details</h3>
+              </div>
+              <span class="panel-head-pill" id="fieldsPanelPill">Required</span>
+            </header>
+            <div class="panel-body" id="fieldsPanelBody">
+              <!-- Filled by JS based on flyer type -->
+            </div>
+          </section>
+
+          <!-- 4. Style -->
+          <section class="panel">
+            <header class="panel-head">
+              <div class="panel-head-l">
+                <span class="panel-head-num">04</span>
+                <h3>Flyer style</h3>
+              </div>
+              <span class="panel-head-pill">Optional</span>
+            </header>
+            <div class="panel-body">
+              <div class="fg" style="margin-bottom:18px;">
+                <label>Template</label>
+                <div class="template-toggle" id="templateToggle" role="radiogroup" aria-label="Flyer template">
+                  <button type="button" class="tpl-opt selected" data-template="editorial" role="radio" aria-checked="true">
+                    <span class="tpl-chip dark"></span>
+                    <div>
+                      <div class="tpl-name">Editorial</div>
+                      <div class="tpl-sub">Dark · serif headline · ledger</div>
+                    </div>
+                  </button>
+                  <button type="button" class="tpl-opt" data-template="dealtape" role="radio" aria-checked="false">
+                    <span class="tpl-chip light"></span>
+                    <div>
+                      <div class="tpl-name">Deal Tape</div>
+                      <div class="tpl-sub">Light · big number · tabular</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              <div class="fg">
+                <label for="tagline">Tagline / headline <span style="text-transform:none;letter-spacing:normal;color:var(--gray-500);">(optional)</span></label>
+                <input type="text" id="tagline" placeholder="Leave blank for the default headline"/>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sticky action bar -->
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <strong>Ready to export?</strong> &nbsp; Preview updates live.
+            </div>
+            <button class="btn-sec" id="resetBtn">Reset</button>
+            <button class="btn-gen" id="dlPngBtn">Download PNG</button>
+            <button class="btn-gen amber" id="dlPdfBtn">Download PDF</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: live preview -->
+        <aside class="gen-right">
+          <div class="preview-wrap">
+            <header class="preview-head">
+              <div class="preview-head-title">
+                <span class="dot"></span> Live preview
+              </div>
+              <div class="preview-head-actions">
+                <button class="btn-dl" id="dlPngBtn2">PNG</button>
+                <button class="btn-dl primary" id="dlPdfBtn2">PDF</button>
+              </div>
+            </header>
+            <div class="preview-canvas-wrap">
+              <div class="flyer-canvas-frame">
+                <div class="flyer-canvas" id="flyerCanvas">
+                  <!-- rendered by JS at native US Letter size (816×1056) -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:0.72rem; color:var(--gray-500); padding:12px 6px; line-height:1.55; text-align:center;">
+            Flyers export at 1200 × 1600 · print-ready at 150dpi.<br/>
+            Your info saves to this browser only.
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ===== RESOURCE: COMING SOON teaser block ===== -->
+    <div class="resource" data-resource="coming-soon">
+      <header class="resource-head">
+        <div class="resource-head-left">
+          <div class="eyebrow"><span class="dot"></span> In the pipeline</div>
+          <h2>More resources, <em>monthly.</em></h2>
+        </div>
+      </header>
+      <div class="coming-soon-grid">
+        <div class="coming-card">
+          <div class="coming-card-num">— 01</div>
+          <h4>Pricing <em>scenarios</em></h4>
+          <p>Rate comparisons and payment breakdowns for your buyer in seconds.</p>
+        </div>
+        <div class="coming-card">
+          <div class="coming-card-num">— 02</div>
+          <h4>Pre-approval <em>kit</em></h4>
+          <p>Document checklist, timeline, and FAQs — ready to send.</p>
+        </div>
+        <div class="coming-card">
+          <div class="coming-card-num">— 03</div>
+          <h4>Program <em>guides</em></h4>
+          <p>One-pagers on Non-QM, DSCR, Bank Statement. Client-ready.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Notification -->
+<div class="partner-notif" id="notif">
+  <span class="dot"></span>
+  <span id="notifMsg">Saved</span>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom:4px;">
+          <img src="assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img footer-logo-img">
+          <span>United Trust Mortgage</span>
+        </a>
+        <p>Nationwide mortgage brokerage specializing in Non-QM and specialty lending solutions for borrowers and investors.</p>
+        <div class="footer-apply-row">
+          <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Apply Now</a>
+          <a href="https://2591548.my1003app.com/1220456/register?POSAppLanguage=ES&time=1776372290661" target="_blank" rel="noopener" class="footer-lang-link">Español →</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="blog/dscr.html">DSCR Loans</a>
+        <a href="blog/bank-statement.html">Bank Statement</a>
+        <a href="blog/pnl.html">P&L Loans</a>
+        <a href="blog/asset-depletion.html">Asset Depletion</a>
+        <a href="blog/conventional-fha-va.html">Conventional / FHA / VA</a>
+        <a href="blog/jumbo.html">Jumbo Loans</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="calculators/index.html">Calculators</a>
+        <a href="analyze/index.html">Property Analyzer</a>
+        <a href="str-outlook/index.html">STR Outlook</a>
+        <a href="market-data/index.html">Market Data</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="blog/index.html">Blog</a>
+        <a href="team.html">Our Team</a>
+        <a href="partners.html">Partners</a>
+        <a href="index.html#process">How It Works</a>
+        <a href="index.html#reviews">Testimonials</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:info@myunitedtrust.com">info@myunitedtrust.com</a>
+        <a href="tel:+1800000000">(800) 000-0000</a>
+        <a href="https://www.myunitedtrust.com" target="_blank" rel="noopener">www.myunitedtrust.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 United Trust Mortgage. All rights reserved. NMLS# 2591548. Equal Housing Lender.</span>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms</a>
+        <a href="econsent.html">eConsent</a>
+        <a href="wireless.html">Wireless Policy</a>
+        <a href="#">Licensing</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="partners-app.js"></script>
+<script>
+  const mt = document.getElementById('mobileToggle');
+  const mm = document.getElementById('mobileMenu');
+  if (mt && mm) {
+    mt.addEventListener('click', () => mm.classList.toggle('active'));
+    mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('active')));
+  }
+</script>
+</body>
+</html>

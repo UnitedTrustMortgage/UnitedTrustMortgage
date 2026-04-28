@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Data — United Trust Mortgage</title>
+<meta name="description" content="Live mortgage rates, treasury yields, Fed funds rate, housing starts, and rental market data. Key economic indicators for real estate investors.">
+<link rel="canonical" href="../market-data/index.html">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Market Data & Economic Climate | United Trust Mortgage">
+<meta property="og:description" content="Live mortgage rates, treasury yields, Fed funds rate, housing starts, and rental market data for real estate investors.">
+<meta property="og:url" content="/market-data/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Market Data & Economic Climate | United Trust Mortgage">
+<meta name="twitter:description" content="Live mortgage rates, treasury yields, Fed funds rate, housing starts, and rental market data for real estate investors.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,1,300;9..144,1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .md-hero {
+    padding: calc(var(--nav-height) + 80px) 0 56px;
+    background:
+      radial-gradient(1200px 400px at 80% 0%, rgba(201, 169, 97, 0.08), transparent 60%),
+      var(--primary-dark);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .md-hero-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .md-hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .md-hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent-gold);
+  }
+  .md-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .md-hero h1 em {
+    font-style: italic;
+    color: var(--accent-gold);
+  }
+  .md-hero-sub {
+    font-size: 0.98rem;
+    color: var(--gray-400);
+    max-width: 540px;
+    line-height: 1.7;
+  }
+  .last-updated {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    align-self: flex-start;
+    padding-top: 8px;
+    letter-spacing: 0.04em;
+  }
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    animation: md-pulse 2s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes md-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .breadcrumb {
+    background: var(--secondary-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding: 10px 24px;
+  }
+  .breadcrumb-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb a, .breadcrumb span {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .breadcrumb a:hover { color: var(--accent-gold); }
+  .breadcrumb .current { color: var(--accent-gold); }
+
+  .main { max-width: var(--container-max); margin: 0 auto; padding: 56px 24px 80px; }
+
+  .md-section-label {
+    font-size: 0.7rem;
+    color: var(--accent-gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+  .md-section-label::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--accent-gold);
+  }
+
+  /* Tickers */
+  .ticker-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+  .ticker-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    transition: all var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+  }
+  .ticker-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .ticker-card:hover {
+    border-color: rgba(201, 169, 97, 0.3);
+    transform: translateY(-2px);
+  }
+  .ticker-card:hover::after { transform: scaleX(1); }
+  .ticker-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .ticker-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .ticker-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .ticker-change.up { color: #4ADE80; background: rgba(74,222,128,0.12); }
+  .ticker-change.down { color: #e07b70; background: rgba(224,123,112,0.12); }
+  .ticker-change.neutral { color: var(--gray-400); background: rgba(255,255,255,0.06); }
+  .ticker-desc { font-size: 0.72rem; color: var(--gray-500); margin-top: 10px; line-height: 1.5; }
+  .ticker-date { font-size: 0.62rem; color: var(--gray-500); margin-top: 4px; letter-spacing: 0.04em; }
+
+  /* DSCR panel */
+  .dscr-panel {
+    background: var(--glass-bg);
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .dscr-panel-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(201, 169, 97, 0.04);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dscr-panel-title {
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+  }
+  .dscr-panel-note { font-size: 0.7rem; color: var(--gray-500); }
+  .dscr-rates-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .dscr-rate-cell {
+    padding: 24px 28px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+  .dscr-rate-cell:last-child { border-right: none; }
+  .dscr-rate-type {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .dscr-rate-value {
+    font-size: 1.85rem;
+    color: var(--accent-gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .dscr-rate-range {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    letter-spacing: 0.04em;
+  }
+  .dscr-rate-note { font-size: 0.72rem; color: var(--gray-400); margin-top: 8px; line-height: 1.5; }
+
+  /* News panels */
+  .panels-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .news-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .news-panel-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--secondary-dark);
+  }
+  .news-panel-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+  .news-panel-badge {
+    font-size: 0.62rem;
+    background: rgba(201, 169, 97, 0.12);
+    color: var(--accent-gold);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .news-item {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: background var(--transition-fast);
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-item:hover { background: rgba(255,255,255,0.02); }
+  .news-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .news-item-content { flex: 1; min-width: 0; }
+  .news-item-title {
+    font-size: 0.9rem;
+    color: var(--white);
+    line-height: 1.45;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .news-item-meta {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .news-item-value {
+    font-size: 1.05rem;
+    color: var(--accent-gold);
+    flex-shrink: 0;
+    text-align: right;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  /* Relevance banner */
+  .relevance-banner {
+    background: linear-gradient(135deg, rgba(201, 169, 97, 0.06), rgba(201, 169, 97, 0.02));
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: var(--radius-lg);
+    padding: 32px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+  .relevance-banner::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 169, 97, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .relevance-text {
+    position: relative;
+    z-index: 1;
+  }
+  .relevance-text strong {
+    display: block;
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .relevance-text p {
+    font-size: 0.9rem;
+    color: var(--gray-300);
+    line-height: 1.65;
+    max-width: 560px;
+  }
+  .relevance-cta {
+    position: relative;
+    z-index: 1;
+    background: var(--accent-gold);
+    color: var(--primary-dark);
+    padding: 13px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+  .relevance-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--gold-glow-strong); }
+
+  /* Skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: md-shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes md-shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+  .skel-value { width: 80px; height: 28px; margin-bottom: 8px; }
+  .skel-change { width: 60px; height: 18px; }
+  .skel-line { width: 100%; height: 14px; margin-bottom: 6px; }
+  .skel-line.short { width: 60%; }
+
+  @media (max-width: 1024px) {
+    .dscr-rates-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 900px) {
+    .ticker-row { grid-template-columns: repeat(2,1fr); }
+    .panels-grid { grid-template-columns: 1fr; }
+    .dscr-rates-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 520px) {
+    .ticker-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ticker-value { font-size: 1.5rem; }
+    .dscr-rates-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <img src="../assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img">
+      <span>United Trust</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#programs">Programs</a>
+      <div class="nav-dropdown">
+        <a href="#" class="nav-dropdown-toggle">Tools <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+        <div class="nav-dropdown-menu">
+          <a href="../calculators/index.html">Calculators</a>
+          <a href="../analyze/index.html">Property Analyzer</a>
+          <a href="../str-outlook/index.html">STR Outlook</a>
+          <a href="../market-data/index.html">Market Data</a>
+        </div>
+      </div>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../team.html">Team</a>
+      <a href="../partners.html">Partners</a>
+    </div>
+    <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta">Apply Now</a>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="../index.html#programs">Programs</a>
+  <a href="../calculators/index.html">Calculators</a>
+  <a href="../analyze/index.html">Property Analyzer</a>
+  <a href="../str-outlook/index.html">STR Outlook</a>
+  <a href="../market-data/index.html">Market Data</a>
+  <a href="../blog/index.html">Blog</a>
+  <a href="../team.html">Team</a>
+  <a href="../partners.html">Partners</a>
+  <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:12px;text-align:center;">Apply Now</a>
+</div>
+
+<div class="md-hero">
+  <div class="md-hero-inner">
+    <div>
+      <div class="md-hero-eyebrow">Live Economic Data</div>
+      <h1>Market Data &amp; <em>Economic Climate</em></h1>
+      <p class="md-hero-sub">Key indicators that directly affect DSCR loan rates and rental market conditions. Updated from the Federal Reserve and public market sources.</p>
+    </div>
+    <div class="last-updated">
+      <div class="pulse"></div>
+      <span id="update-time">Fetching data…</span>
+    </div>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="../index.html">Home</a>
+    <span>/</span>
+    <span class="current">Market Data</span>
+  </div>
+</div>
+
+<main class="main">
+
+  <div class="md-section-label">Live Rate Indicators</div>
+  <div class="ticker-row" id="ticker-row">
+    <div class="ticker-card"><div class="ticker-label">30-Yr Mortgage Rate</div><div class="skeleton skel-value"></div><div class="skeleton skel-change"></div></div>
+    <div class="ticker-card"><div class="ticker-label">10-Yr Treasury Yield</div><div class="skeleton skel-value"></div><div class="skeleton skel-change"></div></div>
+    <div class="ticker-card"><div class="ticker-label">Federal Funds Rate</div><div class="skeleton skel-value"></div><div class="skeleton skel-change"></div></div>
+    <div class="ticker-card"><div class="ticker-label">CPI Inflation</div><div class="skeleton skel-value"></div><div class="skeleton skel-change"></div></div>
+  </div>
+
+  <div class="md-section-label" style="margin-bottom:16px;">DSCR &amp; Non-QM Indicative Rates</div>
+  <div class="dscr-panel" style="margin-bottom:48px;">
+    <div class="dscr-panel-header">
+      <span class="dscr-panel-title">Current Indicative DSCR &amp; Non-QM Rates</span>
+      <span class="dscr-panel-note" id="dscr-panel-note">Calculating from live US10Y…</span>
+    </div>
+    <div class="dscr-rates-grid" id="dscr-rates-grid">
+      <div class="dscr-rate-cell"><div class="dscr-rate-type">DSCR. Standard</div><div class="skeleton skel-value"></div><div class="skeleton skel-change" style="width:120px;margin-top:8px;"></div></div>
+      <div class="dscr-rate-cell"><div class="dscr-rate-type">DSCR. High LTV</div><div class="skeleton skel-value"></div><div class="skeleton skel-change" style="width:120px;margin-top:8px;"></div></div>
+      <div class="dscr-rate-cell"><div class="dscr-rate-type">Non-QM</div><div class="skeleton skel-value"></div><div class="skeleton skel-change" style="width:120px;margin-top:8px;"></div></div>
+      <div class="dscr-rate-cell"><div class="dscr-rate-type">Short-Term Rental (STR)</div><div class="skeleton skel-value"></div><div class="skeleton skel-change" style="width:120px;margin-top:8px;"></div></div>
+    </div>
+  </div>
+
+  <div class="md-section-label">Rate &amp; Housing Detail</div>
+  <div class="panels-grid">
+    <div class="news-panel">
+      <div class="news-panel-header">
+        <span class="news-panel-title">Mortgage &amp; Rate Trends</span>
+        <span class="news-panel-badge">FRED Data</span>
+      </div>
+      <div id="mortgage-news">
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+      </div>
+    </div>
+    <div class="news-panel">
+      <div class="news-panel-header">
+        <span class="news-panel-title">Housing &amp; Rental Market</span>
+        <span class="news-panel-badge">FRED Data</span>
+      </div>
+      <div id="housing-news">
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+        <div class="news-item"><div class="news-dot"></div><div class="news-item-content"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relevance-banner">
+    <div class="relevance-text">
+      <strong>How do these numbers affect your DSCR loan?</strong>
+      <p>When the 10-year Treasury rises, DSCR rates typically follow within days. Lock in your rate before the next Fed meeting. Our team monitors these indicators daily to find you the best pricing.</p>
+    </div>
+    <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="relevance-cta">Check My Rate →</a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-logo" style="margin-bottom:4px;">
+          <img src="../assets/utm-logo.png" alt="United Trust Mortgage" class="nav-logo-img footer-logo-img">
+          <span>United Trust Mortgage</span>
+        </a>
+        <p>Nationwide mortgage brokerage specializing in Non-QM and specialty lending solutions for borrowers and investors.</p>
+        <div class="footer-apply-row">
+          <a href="https://2591548.my1003app.com/1220456/register?time=1776372281202" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Apply Now</a>
+          <a href="https://2591548.my1003app.com/1220456/register?POSAppLanguage=ES&time=1776372290661" target="_blank" rel="noopener" class="footer-lang-link">Español →</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <a href="../blog/dscr.html">DSCR Loans</a>
+        <a href="../blog/bank-statement.html">Bank Statement</a>
+        <a href="../blog/pnl.html">P&L Loans</a>
+        <a href="../blog/asset-depletion.html">Asset Depletion</a>
+        <a href="../blog/conventional-fha-va.html">Conventional / FHA / VA</a>
+        <a href="../blog/jumbo.html">Jumbo Loans</a>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a href="../calculators/index.html">Calculators</a>
+        <a href="../analyze/index.html">Property Analyzer</a>
+        <a href="../str-outlook/index.html">STR Outlook</a>
+        <a href="../market-data/index.html">Market Data</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="../blog/index.html">Blog</a>
+        <a href="../team.html">Our Team</a>
+        <a href="../partners.html">Partners</a>
+        <a href="../index.html#process">How It Works</a>
+        <a href="../index.html#reviews">Testimonials</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:info@myunitedtrust.com">info@myunitedtrust.com</a>
+        <a href="tel:+1800000000">(800) 000-0000</a>
+        <a href="https://www.myunitedtrust.com" target="_blank" rel="noopener">www.myunitedtrust.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 United Trust Mortgage. All rights reserved. NMLS# 2591548. Equal Housing Lender.</span>
+      <div class="footer-legal">
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms</a>
+        <a href="../econsent.html">eConsent</a>
+        <a href="../wireless.html">Wireless Policy</a>
+        <a href="#">Licensing</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+async function fetchSeries(seriesId, limit = 2) {
+  const url = `/.netlify/functions/fred-proxy?series_id=${seriesId}&limit=${limit}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Proxy error ${r.status}`);
+  const d = await r.json();
+  return d.observations || [];
+}
+
+function fmtDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function fmtVal(val, seriesId) {
+  const n = parseFloat(val);
+  if (isNaN(n)) return ',';
+  if (seriesId === 'MSPUS')  return '$' + (n / 1000).toFixed(0) + 'K';
+  if (seriesId === 'HOUST')  return (n / 1000).toFixed(0) + 'K';
+  return n.toFixed(2);
+}
+
+function changeTag(curr, prev, downIsGood = false, small = false) {
+  if (prev === null || isNaN(prev)) return '';
+  const delta = curr - prev;
+  const arrow = delta >= 0 ? '▲' : '▼';
+  const isPositive = delta >= 0;
+  const cls = downIsGood ? (isPositive ? 'down' : 'up') : (isPositive ? 'up' : 'down');
+  const sz = small ? 'font-size:11px;' : '';
+  return `<span class="ticker-change ${cls}" style="${sz}">${arrow} ${Math.abs(delta).toFixed(2)}</span>`;
+}
+
+async function loadDscrRates() {
+  const obs = await fetchSeries('DGS10', 1);
+  const grid = document.getElementById('dscr-rates-grid');
+  const noteEl = document.getElementById('dscr-panel-note');
+
+  if (!obs.length || isNaN(parseFloat(obs[0].value))) {
+    grid.innerHTML = `<div class="dscr-rate-cell" style="grid-column:1/-1;padding:28px;color:var(--gray-400);font-size:0.85rem;">Rate data temporarily unavailable. Please call for current pricing.</div>`;
+    noteEl.textContent = 'Data unavailable';
+    return;
+  }
+
+  const us10y     = parseFloat(obs[0].value);
+  const asOfDate  = fmtDate(obs[0].date);
+
+  const products = [
+    { type: 'DSCR. Standard',         spread: 2.50, note: 'DSCR ≥ 1.20 · LTV ≤ 75% · 720+ FICO' },
+    { type: 'DSCR. High LTV',         spread: 3.20, note: 'DSCR ≥ 1.00 · LTV up to 80% · 680+ FICO' },
+    { type: 'Non-QM',                 spread: 2.20, note: 'Alt-doc · Self-employed borrowers · P&L accepted' },
+    { type: 'Short-Term Rental (STR)', spread: 3.00, note: 'Airbnb/VRBO income · AirDNA market data accepted' },
+  ];
+
+  grid.innerHTML = products.map(p => {
+    const rate    = us10y + p.spread;
+    const rangeLo = rate.toFixed(2);
+    const rangeHi = (rate + 1.50).toFixed(2);
+    return `
+      <div class="dscr-rate-cell">
+        <div class="dscr-rate-type">${p.type}</div>
+        <div class="dscr-rate-value">${rate.toFixed(2)}%</div>
+        <div class="dscr-rate-range">${rangeLo}% – ${rangeHi}%</div>
+        <div class="dscr-rate-note">${p.note}</div>
+      </div>`;
+  }).join('');
+
+  noteEl.textContent = `Live · US10Y ${us10y.toFixed(2)}% as of ${asOfDate} · Rates vary by LTV, DSCR ratio & credit score`;
+}
+
+async function loadTickers() {
+  const configs = [
+    { id: 'MORTGAGE30US', label: '30-Yr Mortgage Rate', unit: '%', desc: 'Freddie Mac weekly avg fixed rate', downIsGood: true,  limit: 2  },
+    { id: 'DGS10',        label: '10-Yr Treasury',      unit: '%', desc: 'Key benchmark for mortgage pricing', downIsGood: true, limit: 2  },
+    { id: 'FEDFUNDS',     label: 'Fed Funds Rate',      unit: '%', desc: 'Upper target bound, FOMC',          downIsGood: false, limit: 2  },
+    { id: 'CPIAUCSL',     label: 'CPI Inflation',       unit: '%', desc: 'Year-over-year change',             downIsGood: true,  limit: 13 },
+  ];
+
+  const results = await Promise.allSettled(configs.map(c => fetchSeries(c.id, c.limit)));
+  const row = document.getElementById('ticker-row');
+  row.innerHTML = '';
+
+  results.forEach((res, i) => {
+    const cfg  = configs[i];
+    const card = document.createElement('div');
+    card.className = 'ticker-card';
+    let inner = `<div class="ticker-label">${cfg.label}</div>`;
+
+    if (res.status === 'fulfilled' && res.value.length > 0) {
+      const obs  = res.value;
+      const curr = parseFloat(obs[0].value);
+      const prev = obs[1] ? parseFloat(obs[1].value) : null;
+
+      if (cfg.id === 'CPIAUCSL' && obs.length >= 13) {
+        const yoy = ((curr - parseFloat(obs[12].value)) / parseFloat(obs[12].value)) * 100;
+        const cls = yoy > 3 ? 'down' : 'up';
+        inner += `<div class="ticker-value">${yoy.toFixed(2)}%</div>`;
+        inner += `<span class="ticker-change ${cls}">${yoy > 3 ? '▲' : '▼'} YoY</span>`;
+      } else {
+        const displayVal = fmtVal(obs[0].value, cfg.id) + (cfg.unit === '%' ? '%' : '');
+        inner += `<div class="ticker-value">${displayVal}</div>`;
+        inner += changeTag(curr, prev, cfg.downIsGood);
+      }
+      inner += `<div class="ticker-desc">${cfg.desc}</div>`;
+      inner += `<div class="ticker-date">As of ${fmtDate(obs[0].date)}</div>`;
+    } else {
+      inner += `<div class="ticker-value" style="font-size:1.2rem;color:var(--gray-500);">Unavailable</div>`;
+      inner += `<div class="ticker-desc">${cfg.desc}</div>`;
+    }
+
+    card.innerHTML = inner;
+    row.appendChild(card);
+  });
+}
+
+async function loadPanel(containerId, seriesList) {
+  const container = document.getElementById(containerId);
+  const results = await Promise.allSettled(seriesList.map(s => fetchSeries(s.id, 2)));
+  container.innerHTML = '';
+
+  results.forEach((res, i) => {
+    const meta = seriesList[i];
+    const item = document.createElement('div');
+    item.className = 'news-item';
+    let valHtml = '', metaHtml = '';
+
+    if (res.status === 'fulfilled' && res.value.length > 0) {
+      const obs  = res.value;
+      const curr = parseFloat(obs[0].value);
+      const prev = obs[1] ? parseFloat(obs[1].value) : null;
+      let displayVal = fmtVal(obs[0].value, meta.id);
+      if (meta.unit === '%') displayVal += '%';
+      valHtml  = `<div class="news-item-value">${displayVal}<br>${changeTag(curr, prev, meta.downIsGood, true)}</div>`;
+      metaHtml = `<div class="news-item-meta"><span>${fmtDate(obs[0].date)}</span><span>${meta.note}</span></div>`;
+    } else {
+      valHtml  = `<div class="news-item-value" style="color:var(--gray-500);font-size:12px;">N/A</div>`;
+      metaHtml = `<div class="news-item-meta"><span>${meta.note}</span></div>`;
+    }
+
+    item.innerHTML = `
+      <div class="news-dot"></div>
+      <div class="news-item-content">
+        <div class="news-item-title">${meta.label}</div>
+        ${metaHtml}
+      </div>
+      ${valHtml}`;
+    container.appendChild(item);
+  });
+}
+
+async function init() {
+  const mortgageSeries = [
+    { id: 'MORTGAGE30US', label: '30-Yr Fixed Mortgage Rate', unit: '%', note: 'Primary rate for conventional loans', downIsGood: true  },
+    { id: 'DGS10',        label: '10-Year Treasury Yield',    unit: '%', note: 'Mortgage spread indicator',           downIsGood: true  },
+    { id: 'FEDFUNDS',     label: 'Federal Funds Rate',        unit: '%', note: "Fed's current cycle target",          downIsGood: false },
+    { id: 'DPRIME',       label: 'Prime Rate',                unit: '%', note: 'Benchmark for commercial lending',    downIsGood: true  },
+  ];
+  const housingSeries = [
+    { id: 'HOUST',     label: 'Housing Starts (SAAR)',   unit: 'K',   note: 'New residential construction units', downIsGood: false },
+    { id: 'RRVRUSQ156N', label: 'Rental Vacancy Rate',     unit: '%',   note: 'Low vacancy = strong rental demand', downIsGood: true  },
+    { id: 'MSPUS',     label: 'Median Home Sale Price',  unit: '$',   note: 'National median, Census/HUD data',   downIsGood: false },
+    { id: 'CSUSHPISA', label: 'Case-Shiller Home Price', unit: 'pts', note: "S&P national home price index",      downIsGood: false },
+  ];
+
+  try {
+    await Promise.all([
+      loadTickers(),
+      loadDscrRates(),
+      loadPanel('mortgage-news', mortgageSeries),
+      loadPanel('housing-news',  housingSeries),
+    ]);
+    const now = new Date();
+    document.getElementById('update-time').textContent =
+      'Updated ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  } catch(e) {
+    document.getElementById('update-time').textContent = 'Data unavailable';
+    console.error(e);
+  }
+}
+
+init();
+</script>
+
+<script>
+  const mt = document.getElementById('mobileToggle');
+  const mm = document.getElementById('mobileMenu');
+  if (mt && mm) {
+    mt.addEventListener('click', () => mm.classList.toggle('active'));
+    mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('active')));
+  }
+</script>
+</body>
+</html>
