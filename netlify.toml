@@ -1,0 +1,34 @@
+# Netlify build + functions config
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Pretty URLs for static folders (so /blog/ resolves to /blog/index.html)
+[[redirects]]
+  from = "/blog"
+  to = "/blog/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/calculators"
+  to = "/calculators/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/analyze"
+  to = "/analyze/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/str-outlook"
+  to = "/str-outlook/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/market-data"
+  to = "/market-data/index.html"
+  status = 200

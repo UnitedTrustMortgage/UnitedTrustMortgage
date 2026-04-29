@@ -1,0 +1,19 @@
+# Local IDE / tooling
+.claude/
+.vscode/
+.idea/
+
+# Mobile screenshots used for design review (not for deploy)
+Screenshots of Mobile/
+
+# Env files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# OS / system
+.DS_Store
+Thumbs.db
+
+# Netlify local
+.netlify/

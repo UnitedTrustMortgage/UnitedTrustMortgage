@@ -1660,8 +1660,8 @@ h4 { font-size: clamp(1rem, 1.4vw, 1.15rem); letter-spacing: -0.015em; }
   .nav-links { display: none; }
   .mobile-toggle { display: flex; }
   .nav-cta { display: none; }
-  .hero { min-height: auto; padding-top: calc(var(--nav-height) + 40px); padding-bottom: 60px; }
-  .hero-content { padding: 40px 24px 60px; }
+  .hero { min-height: auto; padding-top: calc(var(--nav-height) + 40px); padding-bottom: 24px; }
+  .hero-content { padding: 40px 24px 32px; }
   .hero-stats { gap: 32px; }
   .hero-stat-value { font-size: 1.5rem; }
   .programs-grid { grid-template-columns: 1fr; }
@@ -1683,10 +1683,18 @@ h4 { font-size: clamp(1rem, 1.4vw, 1.15rem); letter-spacing: -0.015em; }
 }
 
 @media (max-width: 480px) {
+  :root { --section-padding: clamp(48px, 8vw, 72px); }
   .team-grid { grid-template-columns: 1fr; max-width: 360px; margin-left: auto; margin-right: auto; }
   .hero-stats { flex-direction: column; gap: 16px; }
   .hero-stat::before { display: none; }
   .lead-modal { padding: 32px 24px; }
+  .programs-grid { margin-top: 32px; }
+  .programs .container,
+  .stats-strip .container,
+  .nonqm-section .container,
+  .scenario-section .container { position: relative; z-index: 1; }
+  body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .sticky-cta { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ============================================

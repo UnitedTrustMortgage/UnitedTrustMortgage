@@ -409,6 +409,29 @@
       .calc-grid { grid-template-columns: 1fr; }
       .calc-panel { padding: 24px; }
       .seo-grid { grid-template-columns: 1fr; }
+      .tool-hero { padding: calc(var(--nav-height) + 48px) 0 40px; }
+      .tool-hero p { font-size: 0.95rem; padding: 0 20px; }
+      .calc-section { padding: 32px 0 56px; }
+      .calc-wrapper { padding: 0 16px; }
+
+      /* Convert wrapping tab row → single-row horizontal scroll */
+      .calc-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .calc-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        min-width: auto;
+        padding: 14px 18px;
+        font-size: 0.82rem;
+      }
+
+      .buydown-type-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
