@@ -2347,3 +2347,14 @@ h4 { font-size: clamp(1rem, 1.4vw, 1.15rem); letter-spacing: -0.015em; }
   .hero-stats { grid-template-columns: repeat(2, 1fr); }
   .ledger-card { padding: 24px; }
 }
+
+/* Hero headline — keep "Capital that closes." on one line */
+.hero-headline { font-size: clamp(2.4rem, 5.4vw, 4.6rem); line-height: 0.98; }
+.hero-headline-line {
+  display: block;
+  white-space: nowrap;
+}
+@media (max-width: 540px) {
+  .hero-headline { font-size: clamp(2.2rem, 8vw, 3.2rem); }
+  .hero-headline-line { white-space: normal; }
+}
