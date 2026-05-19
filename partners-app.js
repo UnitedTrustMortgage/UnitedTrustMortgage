@@ -503,7 +503,7 @@
 
         <!-- NMLS strip -->
         <div style="position:relative; padding:9px 28px; background:${t.stripBg}; display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:0.22em; text-transform:uppercase; color:${t.muted};">
-          <span>NMLS #2591548 · Equal Housing Lender · Licensed in 48 States</span>
+          <span>NMLS #2591548 · Equal Housing Lender</span>
           <span>UTM · ${('0' + (new Date().getMonth()+1)).slice(-2)} · ${String(new Date().getFullYear()).slice(-2)}</span>
         </div>
       </div>`;
@@ -636,7 +636,7 @@
 
         <!-- NMLS strip -->
         <div style="padding:10px 28px; background:${isLight ? 'rgba(11,30,63,0.05)' : 'rgba(0,0,0,0.30)'}; display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:7.5px; letter-spacing:0.22em; text-transform:uppercase; color:${t.muted};">
-          <span>NMLS #2591548 · Equal Housing Lender · Licensed in 48 States</span>
+          <span>NMLS #2591548 · Equal Housing Lender</span>
           <span>UTM · ${('0' + (new Date().getMonth()+1)).slice(-2)} · ${String(new Date().getFullYear()).slice(-2)}</span>
         </div>
       </div>`;
