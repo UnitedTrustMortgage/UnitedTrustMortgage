@@ -11,36 +11,6 @@
   line-height: 1.5;
 }
 
-/* ── Defensive overrides ──────────────────────────────────────
-   The main UTM styles.css is dark-text-on-cream (marketing pages),
-   so its global rules force `h1..h6 { color: var(--ink) }` and
-   `h1 em { color: var(--emerald) }` — invisible against our dark
-   surface. Re-color anything inside .qb-page back to the bone
-   palette and let the per-class rules below set the actual sizes. */
-.qb-page h1,
-.qb-page h2,
-.qb-page h3,
-.qb-page h4,
-.qb-page h5,
-.qb-page h6 {
-  color: var(--bone);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-size: inherit;
-}
-.qb-page h1 em,
-.qb-page h2 em,
-.qb-page h3 em,
-.qb-page h4 em {
-  color: var(--champagne);
-  font-style: italic;
-  font-weight: 300;
-}
-.qb-page p     { line-height: inherit; }
-.qb-page label { color: inherit; }
-.qb-page a     { color: var(--champagne); }
-
 /* ── Login ──────────────────────────────────────────────────── */
 .qb-login {
   min-height: 100vh;
