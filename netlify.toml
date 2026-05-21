@@ -47,24 +47,6 @@
 # stored in the cadence-crm Supabase (table: quote_operators).
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Force www → apex for the quote builder. We have to do this at the HTML
-# level (not just trust Netlify's default 308 on assets) because the
-# Set-Cookie response on login gets scoped to whichever host the API
-# response came from; mixing www visitor + apex API origin means the
-# session cookie never makes it back to the browser. Status 301 + force
-# applies before the catch-all asset redirects.
-[[redirects]]
-  from   = "https://www.myunitedtrust.com/quotes/*"
-  to     = "https://myunitedtrust.com/quotes/:splat"
-  status = 301
-  force  = true
-
-[[redirects]]
-  from   = "https://www.myunitedtrust.com/api/*"
-  to     = "https://myunitedtrust.com/api/:splat"
-  status = 301
-  force  = true
-
 # Subdomain rewrites: quotes.myunitedtrust.com/* → /quotes/* assets, with the
 # token URL collapsing to q.html for prettiness.
 [[redirects]]

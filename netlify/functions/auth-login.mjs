@@ -85,13 +85,6 @@ export const handler = async (event) => {
     // Also set a cookie so the operator stays signed in without JS having
     // to manage the token across pages. SameSite=Lax is fine — the API and
     // the operator UI live on the same Netlify deploy.
-    //
-    // Domain=.myunitedtrust.com so the cookie applies to apex AND every
-    // subdomain (www, quotes, etc). On Netlify preview deploys the host
-    // is *.netlify.app, where this Domain= attribute is ignored by the
-    // browser (mismatched suffix) — the cookie falls back to host-only,
-    // which is what we want there anyway. For local `netlify dev`, the
-    // Domain attribute is also ignored against localhost.
-    "Set-Cookie": `utm_quote_session=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_DAYS * 24 * 60 * 60}; Domain=.myunitedtrust.com`,
+    "Set-Cookie": `utm_quote_session=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_DAYS * 24 * 60 * 60}`,
   });
 };
