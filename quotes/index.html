@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Builder — UTM</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,1,300;9..144,1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="builder.css">
+</head>
+<body class="qb-page">
+
+  <!-- Login screen — shown until a valid session is detected. -->
+  <main id="qb-login" class="qb-login" hidden>
+    <div class="qb-login-card">
+      <div class="qb-login-brand">
+        <span class="qb-brand-mark">UTM</span>
+        <div>
+          <div class="qb-brand-name">United Trust Mortgage</div>
+          <div class="qb-brand-sub text-mono">QUOTE BUILDER</div>
+        </div>
+      </div>
+      <h1 class="qb-login-title">Enter your pass code</h1>
+      <p class="qb-login-sub">
+        Employee access only. Each pass code is tied to a person — your
+        usage is logged.
+      </p>
+      <form id="qb-login-form" class="qb-login-form" autocomplete="off">
+        <input
+          type="password"
+          id="qb-pass-input"
+          class="qb-input qb-pass-input"
+          placeholder="Pass code"
+          required
+          minlength="4"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        >
+        <button type="submit" class="qb-btn qb-btn-primary qb-btn-block">
+          Sign in
+        </button>
+        <div id="qb-login-error" class="qb-login-error" hidden></div>
+      </form>
+      <p class="qb-login-help text-mono">
+        Lost your code? Reach out to Arin to get a new one issued.
+      </p>
+    </div>
+  </main>
+
+  <!-- App shell — populated by builder.js once authenticated. -->
+  <div id="qb-app" class="qb-app" hidden></div>
+
+  <script src="builder.js"></script>
+</body>
+</html>

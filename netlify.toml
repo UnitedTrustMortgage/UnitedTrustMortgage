@@ -32,3 +32,67 @@
   from = "/market-data"
   to = "/market-data/index.html"
   status = 200
+
+[[redirects]]
+  from = "/quotes"
+  to = "/quotes/index.html"
+  status = 200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Quote builder — added when we ported the cadence-crm quote builder into
+# this site (see quotes/README.md). The borrower link
+#   https://quotes.myunitedtrust.com/<token>
+# transparently serves the borrower view from /quotes/q.html, even though it's
+# this same Netlify deploy. Operators sign in at /quotes/ using pass codes
+# stored in the cadence-crm Supabase (table: quote_operators).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Subdomain rewrites: quotes.myunitedtrust.com/* → /quotes/* assets, with the
+# token URL collapsing to q.html for prettiness.
+[[redirects]]
+  from = "https://quotes.myunitedtrust.com/"
+  to   = "/quotes/index.html"
+  status = 200
+
+[[redirects]]
+  from = "https://quotes.myunitedtrust.com/:token"
+  to   = "/quotes/q.html?t=:token"
+  status = 200
+
+[[redirects]]
+  from = "https://quotes.myunitedtrust.com/*"
+  to   = "/:splat"
+  status = 200
+
+# Friendlier API paths for the operator + borrower JS so they don't have to
+# know about /.netlify/functions/...
+[[redirects]]
+  from = "/api/auth/login"
+  to   = "/.netlify/functions/auth-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth/me"
+  to   = "/.netlify/functions/auth-me"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth/logout"
+  to   = "/.netlify/functions/auth-logout"
+  status = 200
+
+[[redirects]]
+  from = "/api/quotes/*"
+  to   = "/.netlify/functions/quotes/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/public/quotes/*"
+  to   = "/.netlify/functions/public-quotes/:splat"
+  status = 200
+
+# Operator UI shouldn't be cached — they want the latest builder on reload.
+[[headers]]
+  for = "/quotes/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

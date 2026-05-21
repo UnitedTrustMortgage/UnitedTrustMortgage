@@ -17,3 +17,6 @@ Thumbs.db
 
 # Netlify local
 .netlify/
+
+# Node deps (Netlify installs from package.json at build time)
+node_modules/
