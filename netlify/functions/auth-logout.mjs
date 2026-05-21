@@ -15,7 +15,11 @@ export const handler = async (event) => {
   }
 
   return json(200, { ok: true }, {
-    "Set-Cookie": "utm_quote_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+    // Match the Domain attribute used at login so the browser actually
+    // clears the right cookie. Without Domain= here, the browser would
+    // create a separate host-only cookie and the .myunitedtrust.com one
+    // would linger.
+    "Set-Cookie": "utm_quote_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0; Domain=.myunitedtrust.com",
   });
 };
 
