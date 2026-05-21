@@ -11,6 +11,35 @@
   line-height: 1.55;
 }
 
+/* ── Defensive overrides ──────────────────────────────────────
+   Same story as builder.css: the main UTM styles.css forces dark
+   text on all h1..h6 and emerald on `em` (intended for the cream
+   marketing pages). On our dark surface those rules make headings
+   invisible. Re-color back to the bone palette. */
+.q-page h1,
+.q-page h2,
+.q-page h3,
+.q-page h4,
+.q-page h5,
+.q-page h6 {
+  color: var(--bone);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-size: inherit;
+}
+.q-page h1 em,
+.q-page h2 em,
+.q-page h3 em,
+.q-page h4 em {
+  color: var(--muted);
+  font-style: italic;
+  font-weight: 300;
+}
+.q-page p     { line-height: inherit; }
+.q-page label { color: inherit; }
+.q-page a     { color: var(--champagne); }
+
 /* ── Topbar ─────────────────────────────────────────────────── */
 .q-topbar {
   display: flex;
