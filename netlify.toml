@@ -110,7 +110,19 @@
   status = 200
 
 # Operator UI shouldn't be cached — they want the latest builder on reload.
+# Same treatment for the CSS/JS so a stuck browser cache can never serve
+# a stale version while we iterate.
 [[headers]]
   for = "/quotes/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/quotes/*.css"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/quotes/*.js"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
