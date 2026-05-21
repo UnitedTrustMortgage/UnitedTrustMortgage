@@ -58,7 +58,7 @@ Set these in **Site settings → Environment variables**:
 
 | Var | Value | Notes |
 |---|---|---|
-| `SUPABASE_URL` | `https://jvdhhvwljocmimqgbtgn.supabase.co` | Cadence CRM Supabase project |
+| `SUPABASE_URL` | (Cadence CRM project URL — Supabase dashboard → Project Settings → General → Reference ID, then prepend `https://` and append `.supabase.co`) | Shared with cadence-crm |
 | `SUPABASE_SERVICE_ROLE_KEY` | (from Supabase dashboard → Project Settings → API) | **Server-only — never exposed to the browser**, bypasses RLS |
 | `CRM_WEBHOOK_URL` | e.g. `https://crm.myunitedtrust.com/api/internal/notify-quote-selected` | Wherever cadence-crm is deployed |
 | `CRM_WEBHOOK_KEY` | A long random string | Must match `UTM_WEBHOOK_KEY` set in cadence-crm |
