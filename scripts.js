@@ -193,4 +193,112 @@
     }
   }
 
+  // ── Hero lead-intake form ("See If You Qualify", 2-step) ──
+  const qualifyForm = document.getElementById('qualify-form');
+  if (qualifyForm) {
+    const $ = (id) => document.getElementById(id);
+
+    function submitLead() {
+      const submitBtn = $('submit-btn');
+      if (submitBtn) {
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
+        submitBtn.style.background = '#2a7d4f';
+      }
+
+      const action = qualifyForm.getAttribute('action') || '';
+      if (action.indexOf('YOUR_FORM_ID') !== -1) {
+        // Endpoint not yet configured — leads will not be delivered until
+        // YOUR_FORM_ID in the form action is replaced with a Formspree form ID.
+        console.warn('[lead-form] Formspree endpoint not configured: replace YOUR_FORM_ID in the #qualify-form action with your Formspree form ID.');
+      } else {
+        fetch(action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(qualifyForm)
+        }).catch(function () {});
+      }
+
+      setTimeout(function () {
+        if (submitBtn) {
+          submitBtn.textContent = '✓ Application Received';
+          submitBtn.disabled = true;
+        }
+        if (!document.getElementById('lead-success')) {
+          const panel = document.createElement('div');
+          panel.id = 'lead-success';
+          panel.setAttribute('role', 'status');
+          panel.style.cssText = 'margin-top:18px;padding:18px 20px;background:#edf7f1;border:1.5px solid #2a7d4f;border-radius:8px;font-size:14px;line-height:1.6;color:#1a2636;';
+          panel.innerHTML = '<strong style="display:block;font-size:15px;color:#1a563a;margin-bottom:6px;">What happens next</strong>' +
+            'A licensed loan officer from <strong>United Trust Mortgage</strong> (NMLS #2591548) will reach out within <strong>24 hours</strong> by phone, email, or text.<br><br>' +
+            '<span style="color:#5a6a7a;font-size:13px;">📞 Need to reach us first? Call <a href="tel:8184477035" style="color:#8a6618;font-weight:600;text-decoration:underline;text-underline-offset:2px;">(818) 447-7035</a>.</span>';
+          const anchor = $('submit-btn');
+          if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+        }
+        const card = $('lead-form');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 1000);
+    }
+
+    // Step 1 → Step 2
+    const nextBtn = $('next-btn');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        let valid = true;
+        document.querySelectorAll('#step1 select').forEach(function (f) {
+          if (!f.value) { f.style.borderColor = '#c0392b'; valid = false; }
+          else f.style.borderColor = '';
+        });
+        if (!valid) return;
+
+        const lt = $('loan_type').value;
+        if (lt === 'bridge_ca' && $('state').value !== 'California') {
+          alert('Our Bridge Loan program is licensed for California real estate only. Please change the property state to California, or select a different loan type (DSCR, Long-Term Rental, Short-Term Rental, or Foreign National) for properties outside CA.');
+          $('state').style.borderColor = '#c0392b';
+          return;
+        }
+        if (lt === 'bridge_ca') {
+          const la = $('loan_amount').value;
+          if (la === '$100K – $300K' || la === '$300K – $750K') {
+            alert('Our California Bridge Loan program has a $1,000,000 minimum loan amount. Please select a loan size of $750K–$2M or larger, or choose a different loan type.');
+            $('loan_amount').style.borderColor = '#c0392b';
+            return;
+          }
+        }
+        const pt = $('property_type').value;
+        if (pt === 'MixedUse' || pt === 'Co-op') {
+          alert('Unfortunately, ' + (pt === 'MixedUse' ? 'mixed-use' : 'co-op') + ' properties are not an eligible property type with United Trust Mortgage. Please select a different property type to continue.');
+          $('property_type').style.borderColor = '#c0392b';
+          return;
+        }
+
+        $('step1').style.display = 'none';
+        $('step2').style.display = 'block';
+        $('dot1').classList.remove('active');
+        $('dot1').classList.add('completed');
+        $('dot2').classList.add('active');
+        $('step-line').classList.add('active');
+        $('label1').style.color = '#2a7d4f';
+        $('label2').style.color = '#0b1f3c';
+      });
+    }
+
+    // Step 2 → submit
+    const submitBtn = $('submit-btn');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function () {
+        let valid = true;
+        ['first_name', 'last_name', 'email', 'phone'].forEach(function (id) {
+          const field = $(id);
+          if (!field.value.trim()) { field.style.borderColor = '#c0392b'; valid = false; }
+          else field.style.borderColor = '';
+        });
+        if (!valid) { alert('Please fill in all fields.'); return; }
+        submitLead();
+      });
+    }
+
+    qualifyForm.addEventListener('submit', function (e) { e.preventDefault(); });
+  }
+
 })();
