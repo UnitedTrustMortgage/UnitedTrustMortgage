@@ -219,6 +219,19 @@
         }).catch(function () {});
       }
 
+      // Notify the owner by SMS and push the lead to the Benji CRM via the
+      // Netlify function (email + submission archive are handled by Formspree
+      // above). Fire-and-forget — never blocks the success UX.
+      try {
+        const leadData = {};
+        new FormData(qualifyForm).forEach(function (v, k) { leadData[k] = v; });
+        fetch('/.netlify/functions/submit-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadData)
+        }).catch(function () {});
+      } catch (e) {}
+
       setTimeout(function () {
         if (submitBtn) {
           submitBtn.textContent = '✓ Application Received';
