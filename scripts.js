@@ -203,7 +203,7 @@
       if (submitBtn) {
         submitBtn.textContent = 'Submitting...';
         submitBtn.disabled = true;
-        submitBtn.style.background = '#2a7d4f';
+        submitBtn.style.background = '#1f5b4a';
       }
 
       const action = qualifyForm.getAttribute('action') || '';
@@ -228,10 +228,10 @@
           const panel = document.createElement('div');
           panel.id = 'lead-success';
           panel.setAttribute('role', 'status');
-          panel.style.cssText = 'margin-top:18px;padding:18px 20px;background:#edf7f1;border:1.5px solid #2a7d4f;border-radius:8px;font-size:14px;line-height:1.6;color:#1a2636;';
-          panel.innerHTML = '<strong style="display:block;font-size:15px;color:#1a563a;margin-bottom:6px;">What happens next</strong>' +
+          panel.style.cssText = 'margin-top:18px;padding:18px 20px;background:rgba(31,91,74,0.07);border:1px solid #1f5b4a;border-radius:2px;font-size:14px;line-height:1.6;color:#14211b;';
+          panel.innerHTML = '<strong style="display:block;font-size:15px;color:#0f3d31;margin-bottom:6px;">What happens next</strong>' +
             'A licensed loan officer from <strong>United Trust Mortgage</strong> (NMLS #2591548) will reach out within <strong>24 hours</strong> by phone, email, or text.<br><br>' +
-            '<span style="color:#5a6a7a;font-size:13px;">📞 Need to reach us first? Call <a href="tel:8184477035" style="color:#8a6618;font-weight:600;text-decoration:underline;text-underline-offset:2px;">(818) 447-7035</a>.</span>';
+            '<span style="color:rgba(11,20,16,0.62);font-size:13px;">📞 Need to reach us first? Call <a href="tel:8184477035" style="color:#1f5b4a;font-weight:600;text-decoration:underline;text-underline-offset:2px;">(818) 447-7035</a>.</span>';
           const anchor = $('submit-btn');
           if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor.nextSibling);
         }
@@ -251,20 +251,6 @@
         });
         if (!valid) return;
 
-        const lt = $('loan_type').value;
-        if (lt === 'bridge_ca' && $('state').value !== 'California') {
-          alert('Our Bridge Loan program is licensed for California real estate only. Please change the property state to California, or select a different loan type (DSCR, Long-Term Rental, Short-Term Rental, or Foreign National) for properties outside CA.');
-          $('state').style.borderColor = '#c0392b';
-          return;
-        }
-        if (lt === 'bridge_ca') {
-          const la = $('loan_amount').value;
-          if (la === '$100K – $300K' || la === '$300K – $750K') {
-            alert('Our California Bridge Loan program has a $1,000,000 minimum loan amount. Please select a loan size of $750K–$2M or larger, or choose a different loan type.');
-            $('loan_amount').style.borderColor = '#c0392b';
-            return;
-          }
-        }
         const pt = $('property_type').value;
         if (pt === 'MixedUse' || pt === 'Co-op') {
           alert('Unfortunately, ' + (pt === 'MixedUse' ? 'mixed-use' : 'co-op') + ' properties are not an eligible property type with United Trust Mortgage. Please select a different property type to continue.');
@@ -278,8 +264,8 @@
         $('dot1').classList.add('completed');
         $('dot2').classList.add('active');
         $('step-line').classList.add('active');
-        $('label1').style.color = '#2a7d4f';
-        $('label2').style.color = '#0b1f3c';
+        $('label1').style.color = '#1f5b4a';
+        $('label2').style.color = '#0b1410';
       });
     }
 
