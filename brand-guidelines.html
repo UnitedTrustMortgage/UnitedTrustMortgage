@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines — United Trust Mortgage</title>
+<meta name="description" content="Brand guidelines for United Trust Mortgage — logo, color, typography, components, voice, and compliance.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,1,300;9..144,1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Brand-guidelines page — scoped under .sg-* so it never touches site rules.
+     Tokens, body bg and component classes come from styles.css. */
+  .sg-wrap { max-width: 1080px; margin: 0 auto; padding: 64px 24px 120px; }
+  .sg-doc-head { border-bottom: 1px solid var(--line-strong); padding-bottom: 36px; margin-bottom: 8px; }
+  .sg-logo { height: 54px; width: auto; margin-bottom: 28px; }
+  .sg-doc-head h1 {
+    font-family: var(--font-display); font-weight: 500; letter-spacing: -0.03em;
+    font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.02; margin: 6px 0 14px;
+  }
+  .sg-doc-head .sg-lede { font-size: 1.1rem; color: var(--text-muted); max-width: 640px; }
+  .sg-meta { margin-top: 22px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-soft); display: flex; flex-wrap: wrap; gap: 8px 22px; }
+
+  /* TOC */
+  .sg-toc { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 40px 0 8px; }
+  .sg-toc a { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--emerald); border-bottom: 1px solid transparent; padding-bottom: 2px; transition: border-color .2s; }
+  .sg-toc a:hover { border-color: var(--emerald); }
+
+  /* Sections */
+  .sg-section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .sg-eyebrow { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-mono);
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--emerald); margin-bottom: 18px; }
+  .sg-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--champagne); }
+  .sg-section h2 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; font-size: 2rem; margin-bottom: 16px; }
+  .sg-section h3 { font-size: 1.05rem; font-weight: 600; margin: 28px 0 12px; }
+  .sg-section p { color: var(--text-muted); max-width: 720px; margin-bottom: 14px; }
+  .sg-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* Color swatches */
+  .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-top: 12px; }
+  .sg-swatch { border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; background: var(--paper); }
+  .sg-chip { height: 92px; display: flex; align-items: flex-end; padding: 10px 12px; }
+  .sg-chip .sg-onchip { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.05em; }
+  .sg-swatch-meta { padding: 11px 13px 13px; }
+  .sg-swatch-meta .sg-name { font-weight: 600; font-size: 0.9rem; }
+  .sg-swatch-meta .sg-hex { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+  .sg-swatch-meta .sg-use { font-size: 0.78rem; color: var(--text-soft); margin-top: 7px; line-height: 1.45; }
+
+  /* Type specimens */
+  .sg-specimen { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 28px 30px; margin: 14px 0 6px; }
+  .sg-specimen .sg-spec-label { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 16px; }
+  .sg-disp { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.025em; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.02; }
+  .sg-disp em { font-style: italic; font-weight: 400; }
+  .sg-weights { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; font-family: var(--font-display); font-size: 1.5rem; }
+  .sg-weights span { color: var(--text-muted); }
+  .sg-body-spec { font-size: 1.02rem; color: var(--ink); max-width: 640px; }
+  .sg-mono-spec { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--emerald); }
+
+  /* Scale table */
+  .sg-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+  .sg-table th, .sg-table td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .sg-table th { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); font-weight: 500; }
+  .sg-table td { color: var(--text-muted); }
+  .sg-table td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .sg-table code, .sg-code { font-family: var(--font-mono); font-size: 0.82rem; background: var(--bone-3); padding: 1px 6px; border-radius: 2px; color: var(--ink); }
+
+  /* Example tiles */
+  .sg-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; margin-top: 14px; }
+  .sg-tile { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 24px; }
+  .sg-tile .sg-tile-cap { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); margin-top: 16px; }
+  .sg-btn-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 6px 0 4px; }
+  .sg-ledger-demo { font-family: var(--font-display); color: var(--champagne); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-size: 1.6rem; }
+
+  /* Do / Don't */
+  .sg-dd { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+  .sg-dd-col { border: 1px solid var(--line); border-radius: var(--radius-md); padding: 22px 24px; background: var(--paper); }
+  .sg-dd-col.do { border-left: 3px solid var(--emerald); }
+  .sg-dd-col.dont { border-left: 3px solid #b4452f; }
+  .sg-dd-col h4 { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
+  .sg-dd-col.do h4 { color: var(--emerald); }
+  .sg-dd-col.dont h4 { color: #b4452f; }
+  .sg-dd-col ul { list-style: none; }
+  .sg-dd-col li { position: relative; padding-left: 18px; margin-bottom: 9px; font-size: 0.9rem; color: var(--text-muted); }
+  .sg-dd-col li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 1px; background: currentColor; opacity: 0.5; }
+
+  .sg-callout { background: var(--champagne-bloom); border: 1px solid var(--line-emerald); border-left: 3px solid var(--emerald);
+    border-radius: var(--radius-md); padding: 18px 22px; margin-top: 16px; font-size: 0.92rem; color: var(--ink); max-width: 760px; }
+
+  .sg-back { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--emerald); margin-bottom: 36px; }
+
+  @media (max-width: 640px) { .sg-dd { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="sg-wrap">
+
+  <a href="index.html" class="sg-back">← Back to site</a>
+
+  <header class="sg-doc-head">
+    <img src="assets/utm-blue.png" alt="United Trust Mortgage" class="sg-logo">
+    <span class="sg-eyebrow">Brand Guidelines</span>
+    <h1>The United Trust Mortgage<br>visual &amp; verbal system</h1>
+    <p class="sg-lede">An editorial, private-bank design language built on bone, ink, and emerald — calm, precise, and confident. Use this as the source of truth for the website, marketing, and any branded material.</p>
+    <div class="sg-meta">
+      <span>United Trust Mortgage</span>
+      <span>DBA of UTM Financial, LLC</span>
+      <span>NMLS #2591548</span>
+      <span>myunitedtrust.com</span>
+    </div>
+  </header>
+
+  <nav class="sg-toc">
+    <a href="#essence">Essence</a>
+    <a href="#voice">Voice &amp; Tone</a>
+    <a href="#logo">Logo</a>
+    <a href="#color">Color</a>
+    <a href="#type">Typography</a>
+    <a href="#geometry">Geometry &amp; Space</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#components">Components</a>
+    <a href="#motion">Motion</a>
+    <a href="#imagery">Imagery</a>
+    <a href="#dodont">Do &amp; Don't</a>
+    <a href="#compliance">Compliance</a>
+  </nav>
+
+  <!-- ESSENCE -->
+  <section class="sg-section" id="essence">
+    <span class="sg-eyebrow">01 — Brand Essence</span>
+    <h2>Capital that closes. Without compromise.</h2>
+    <p>United Trust Mortgage is a nationwide Non-QM and specialty mortgage brokerage for borrowers and scenarios traditional banks decline — DSCR, bank statement, P&amp;L, asset depletion, conventional, and jumbo. The brand should feel like a <strong>modern private bank</strong>: understated, exacting, and quietly premium. We lead with <strong>judgment and speed</strong>, not noise.</p>
+    <h3>Brand pillars</h3>
+    <div class="sg-tiles">
+      <div class="sg-tile"><strong>Judgment</strong><div class="sg-tile-cap">Underwritten by people, not just boxes</div></div>
+      <div class="sg-tile"><strong>Speed</strong><div class="sg-tile-cap">Clear-to-close measured in days</div></div>
+      <div class="sg-tile"><strong>Access</strong><div class="sg-tile-cap">One application, many programs</div></div>
+      <div class="sg-tile"><strong>Trust</strong><div class="sg-tile-cap">Licensed, compliant, transparent</div></div>
+    </div>
+  </section>
+
+  <!-- VOICE -->
+  <section class="sg-section" id="voice">
+    <span class="sg-eyebrow">02 — Voice &amp; Tone</span>
+    <h2>How we sound</h2>
+    <p>Confident and precise. Short, declarative sentences. We state outcomes, not adjectives. Plain English over jargon; when a term is technical (DSCR, LTV), we use it correctly and briefly. Never hypey, never pushy — the calm authority of a firm that closes hard deals routinely.</p>
+    <div class="sg-dd">
+      <div class="sg-dd-col do">
+        <h4>Write like this</h4>
+        <ul>
+          <li>"Capital that closes. Without compromise."</li>
+          <li>"Underwritten with judgment, closed with speed."</li>
+          <li>"Qualify on rental income, not your W-2."</li>
+          <li>"No impact to your credit score."</li>
+        </ul>
+      </div>
+      <div class="sg-dd-col dont">
+        <h4>Not like this</h4>
+        <ul>
+          <li>"Unlock your dream with our AMAZING rates!!!"</li>
+          <li>Stacked exclamation points or all-caps hype</li>
+          <li>Vague promises ("best rates guaranteed")</li>
+          <li>Jargon walls with no plain-English anchor</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO -->
+  <section class="sg-section" id="logo">
+    <span class="sg-eyebrow">03 — Logo</span>
+    <h2>Logo &amp; wordmark</h2>
+    <p>The primary mark is the UTM house monogram with the <strong>United Trust Mortgage</strong> wordmark. In tight UI (e.g. the nav) the wordmark may shorten to <strong>United Trust</strong>. Always pair the mark with the full legal name in footers and legal contexts.</p>
+    <div class="sg-tiles">
+      <div class="sg-tile" style="display:flex;align-items:center;justify-content:center;min-height:140px;">
+        <img src="assets/utm-blue.png" alt="United Trust Mortgage logo" style="height:64px;width:auto;">
+      </div>
+      <div class="sg-tile" style="display:flex;align-items:center;justify-content:center;min-height:140px;background:var(--ink);">
+        <img src="assets/utm-blue.png" alt="United Trust Mortgage logo on ink" style="height:64px;width:auto;filter:brightness(0) invert(1);">
+      </div>
+    </div>
+    <h3>Usage rules</h3>
+    <div class="sg-dd">
+      <div class="sg-dd-col do">
+        <h4>Do</h4>
+        <ul>
+          <li>Keep clear space around the mark equal to the height of the monogram</li>
+          <li>Minimum digital width ~120px so the wordmark stays legible</li>
+          <li>Place on bone, paper, or ink backgrounds with strong contrast</li>
+          <li>Use the full "United Trust Mortgage" name in footers / legal</li>
+        </ul>
+      </div>
+      <div class="sg-dd-col dont">
+        <h4>Don't</h4>
+        <ul>
+          <li>Stretch, condense, rotate, or add shadows/glows</li>
+          <li>Recolor the mark outside the brand palette</li>
+          <li>Place on busy photos or low-contrast fields</li>
+          <li>Crowd it against text or other logos</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="sg-section" id="color">
+    <span class="sg-eyebrow">04 — Color</span>
+    <h2>Palette</h2>
+    <p>A restrained three-family system: warm <strong>bone</strong> surfaces, near-black <strong>ink</strong> for type and primary actions, and <strong>emerald</strong> as the single brand/interaction accent. <strong>Champagne</strong> is tertiary only — reserved for ledger figures and corner-crop details. Color names below are the live CSS custom properties in <span class="sg-code">styles.css</span>.</p>
+
+    <h3>Surfaces — Bone &amp; Paper</h3>
+    <div class="sg-swatches">
+      <div class="sg-swatch"><div class="sg-chip" style="background:#f4f1e8;"><span class="sg-onchip" style="color:#0b1410;">--bone</span></div><div class="sg-swatch-meta"><div class="sg-name">Bone</div><div class="sg-hex">#f4f1e8 · --bone</div><div class="sg-use">Primary page background</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#efe9d8;"><span class="sg-onchip" style="color:#0b1410;">--bone-2</span></div><div class="sg-swatch-meta"><div class="sg-name">Bone 2</div><div class="sg-hex">#efe9d8 · --bone-2</div><div class="sg-use">Subtle alternating sections</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#e8e3d4;"><span class="sg-onchip" style="color:#0b1410;">--bone-3</span></div><div class="sg-swatch-meta"><div class="sg-name">Bone 3</div><div class="sg-hex">#e8e3d4 · --bone-3</div><div class="sg-use">Dividers, low-emphasis fills</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#fbfaf3;border-bottom:1px solid #e8e3d4;"><span class="sg-onchip" style="color:#0b1410;">--paper</span></div><div class="sg-swatch-meta"><div class="sg-name">Paper</div><div class="sg-hex">#fbfaf3 · --paper</div><div class="sg-use">Raised card / form surface</div></div></div>
+    </div>
+
+    <h3>Ink — Text &amp; Primary Action</h3>
+    <div class="sg-swatches">
+      <div class="sg-swatch"><div class="sg-chip" style="background:#0b1410;"><span class="sg-onchip" style="color:#f4f1e8;">--ink</span></div><div class="sg-swatch-meta"><div class="sg-name">Ink</div><div class="sg-hex">#0b1410 · --ink</div><div class="sg-use">Primary text &amp; primary buttons</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#14211b;"><span class="sg-onchip" style="color:#f4f1e8;">--ink-2</span></div><div class="sg-swatch-meta"><div class="sg-name">Ink 2</div><div class="sg-hex">#14211b · --ink-2</div><div class="sg-use">Dark card surface (rare)</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#1c2c25;"><span class="sg-onchip" style="color:#f4f1e8;">--ink-3</span></div><div class="sg-swatch-meta"><div class="sg-name">Ink 3</div><div class="sg-hex">#1c2c25 · --ink-3</div><div class="sg-use">Dark hover state</div></div></div>
+    </div>
+
+    <h3>Emerald — Brand &amp; Interaction</h3>
+    <div class="sg-swatches">
+      <div class="sg-swatch"><div class="sg-chip" style="background:#1f5b4a;"><span class="sg-onchip" style="color:#f4f1e8;">--emerald</span></div><div class="sg-swatch-meta"><div class="sg-name">Emerald</div><div class="sg-hex">#1f5b4a · --emerald</div><div class="sg-use">Accents, links, labels, focus</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#0f3d31;"><span class="sg-onchip" style="color:#f4f1e8;">--emerald-deep</span></div><div class="sg-swatch-meta"><div class="sg-name">Emerald Deep</div><div class="sg-hex">#0f3d31 · --emerald-deep</div><div class="sg-use">Primary-button hover</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#5fb89a;"><span class="sg-onchip" style="color:#0b1410;">--emerald-bright</span></div><div class="sg-swatch-meta"><div class="sg-name">Emerald Bright</div><div class="sg-hex">#5fb89a · --emerald-bright</div><div class="sg-use">"Live" dots, positive signals</div></div></div>
+    </div>
+
+    <h3>Accent &amp; Hairlines</h3>
+    <div class="sg-swatches">
+      <div class="sg-swatch"><div class="sg-chip" style="background:#c9a961;"><span class="sg-onchip" style="color:#0b1410;">--champagne</span></div><div class="sg-swatch-meta"><div class="sg-name">Champagne</div><div class="sg-hex">#c9a961 · --champagne</div><div class="sg-use">Tertiary only — ledger figures, corner crops, eyebrow dashes</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#fbfaf3;border:1px solid rgba(11,20,16,0.20);"><span class="sg-onchip" style="color:#0b1410;">--line-strong</span></div><div class="sg-swatch-meta"><div class="sg-name">Line / Hairline</div><div class="sg-hex">rgba(11,20,16,.10–.20)</div><div class="sg-use">--line, --line-strong borders &amp; rules</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#fbfaf3;border:1px solid rgba(31,91,74,0.22);"><span class="sg-onchip" style="color:#1f5b4a;">--line-emerald</span></div><div class="sg-swatch-meta"><div class="sg-name">Line Emerald</div><div class="sg-hex">rgba(31,91,74,.22)</div><div class="sg-use">Emerald-tinted card borders</div></div></div>
+      <div class="sg-swatch"><div class="sg-chip" style="background:#fbfaf3;"><span class="sg-onchip" style="color:rgba(11,20,16,0.62);">--text-muted</span></div><div class="sg-swatch-meta"><div class="sg-name">Muted / Soft text</div><div class="sg-hex">ink @ 62% / 45%</div><div class="sg-use">--text-muted, --text-soft</div></div></div>
+    </div>
+
+    <div class="sg-callout"><strong>Contrast &amp; ratio.</strong> Ink-on-bone and bone-on-ink both exceed WCAG AA. Keep emerald for accents and emerald-on-bone for small interactive text; avoid champagne for body text — it's a metallic accent, not a content color.</div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="sg-section" id="type">
+    <span class="sg-eyebrow">05 — Typography</span>
+    <h2>Type system</h2>
+    <p>Three typefaces: <strong>Fraunces</strong> (display serif) for headlines and figures, <strong>Inter</strong> (sans) for body and UI, and <strong>JetBrains Mono</strong> for instrument-panel details — eyebrows, labels, and metadata.</p>
+
+    <div class="sg-specimen">
+      <div class="sg-spec-label">Fraunces · Display serif · var(--font-display)</div>
+      <div class="sg-disp">Capital that <em>closes</em>.</div>
+      <div class="sg-weights"><span style="font-weight:300;">Light 300</span><span style="font-weight:400;">Regular 400</span><span style="font-weight:500;">Medium 500</span><span style="font-weight:400;font-style:italic;">Italic</span></div>
+    </div>
+    <div class="sg-specimen">
+      <div class="sg-spec-label">Inter · Body &amp; UI · var(--font-main)</div>
+      <p class="sg-body-spec" style="margin:0;">Non-QM lending for borrowers and scenarios traditional banks decline. The quick brown fox jumps over the lazy dog — 1234567890. Inter carries all running text, form fields, and buttons in weights 300–700.</p>
+    </div>
+    <div class="sg-specimen">
+      <div class="sg-spec-label">JetBrains Mono · Detail · var(--font-mono)</div>
+      <div class="sg-mono-spec">Loan Programs · NMLS #2591548 · Pre-Qualification</div>
+    </div>
+
+    <h3>Type scale &amp; usage</h3>
+    <table class="sg-table">
+      <thead><tr><th>Role</th><th>Family</th><th>Size / Weight</th><th>Treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Hero H1</td><td>Fraunces</td><td>clamp(2.4–4.6rem) / 500</td><td>line-height .98, letter-spacing −.03em</td></tr>
+        <tr><td>Section H2</td><td>Fraunces</td><td>~2rem / 500</td><td>letter-spacing −.02em</td></tr>
+        <tr><td>Card / H3</td><td>Inter or Fraunces</td><td>1.05–1.3rem / 600–500</td><td>—</td></tr>
+        <tr><td>Body</td><td>Inter</td><td>1rem / 400</td><td>line-height 1.6–1.8, color --text-muted</td></tr>
+        <tr><td>Small / caption</td><td>Inter</td><td>0.78–0.85rem / 400</td><td>--text-soft</td></tr>
+        <tr><td>Eyebrow / label</td><td>JetBrains Mono</td><td>0.66–0.7rem / 500</td><td>UPPERCASE, letter-spacing .2em, emerald</td></tr>
+        <tr><td>Ledger figure</td><td>Fraunces</td><td>1–2rem / 500</td><td>champagne, tabular-nums</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- GEOMETRY -->
+  <section class="sg-section" id="geometry">
+    <span class="sg-eyebrow">06 — Geometry &amp; Space</span>
+    <h2>Hairline geometry</h2>
+    <p>The system is <strong>squared and editorial</strong>: hairline borders, near-zero radii, and generous negative space. <strong>No rounded corners over 4px.</strong> Structure comes from 1px rules and spacing, not shadows or heavy fills.</p>
+    <table class="sg-table">
+      <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>--radius-sm</td><td>0</td><td>Inputs, sharp edges</td></tr>
+        <tr><td>--radius-md</td><td>2px</td><td>Buttons, cards, chips (default)</td></tr>
+        <tr><td>--radius-lg / xl / pill</td><td>4px</td><td>Max radius anywhere</td></tr>
+        <tr><td>--container-max</td><td>1240px</td><td>Content width</td></tr>
+        <tr><td>--section-padding</td><td>clamp(80px, 10vw, 140px)</td><td>Vertical section rhythm</td></tr>
+        <tr><td>--nav-height</td><td>88px</td><td>Fixed nav height</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="sg-section" id="buttons">
+    <span class="sg-eyebrow">07 — Buttons</span>
+    <h2>Buttons (live)</h2>
+    <p>Rendered with the real site classes. <strong>Primary</strong> (ink fill) is used sparingly for the single most important action; <strong>secondary</strong> for alternatives; <strong>ghost</strong> as a mono text-link with a moving arrow.</p>
+    <div class="sg-tile">
+      <div class="sg-btn-row">
+        <button class="btn btn-primary">Apply Now →</button>
+        <button class="btn btn-secondary">Explore programs</button>
+        <a class="btn-ghost" href="#buttons">Learn more
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="sg-tile-cap">.btn-primary · .btn-secondary · .btn-ghost — radius 2px, Inter 500, hover lifts 1px / shifts to emerald</div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section class="sg-section" id="components">
+    <span class="sg-eyebrow">08 — Signature Components</span>
+    <h2>Recurring elements</h2>
+    <div class="sg-tiles">
+      <div class="sg-tile">
+        <span class="section-label">Loan Programs</span>
+        <div class="sg-tile-cap">Section label — mono emerald eyebrow with a champagne dash. Opens most sections.</div>
+      </div>
+      <div class="sg-tile">
+        <span class="sg-ledger-demo">$1.5B · 1.42&times; · 7.125%</span>
+        <div class="sg-tile-cap">Ledger figures — Fraunces in champagne, tabular numerals. For metrics &amp; rates only.</div>
+      </div>
+      <div class="sg-tile crop" style="min-height:96px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:var(--font-display);font-size:1.1rem;">Corner crop</span>
+        <div class="sg-tile-cap" style="position:absolute;left:24px;bottom:14px;">.crop — champagne L-marks frame premium cards.</div>
+      </div>
+      <div class="sg-tile" style="background:var(--paper);border-color:var(--line-emerald);">
+        <div style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:6px;">Paper card</div>
+        <div style="color:var(--text-muted);font-size:0.88rem;">Paper surface · emerald hairline · subtle emerald glow — the standard card &amp; form treatment.</div>
+      </div>
+    </div>
+    <div class="sg-callout">Cards = <strong>paper surface + 1px hairline (line or line-emerald)</strong>, optional radial emerald glow at a top corner, radius 2px. Reserve dark <strong>ink</strong> fills for primary CTAs and the occasional status chip — not whole sections.</div>
+  </section>
+
+  <!-- MOTION -->
+  <section class="sg-section" id="motion">
+    <span class="sg-eyebrow">09 — Motion</span>
+    <h2>Motion</h2>
+    <p>Motion is <strong>subtle and confident</strong> — short fades, 1px lifts, reveal-on-scroll. Nothing bouncy or attention-seeking.</p>
+    <table class="sg-table">
+      <thead><tr><th>Token</th><th>Curve / Duration</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>--transition-fast</td><td>0.2s ease-out-quart</td><td>Hovers, focus, small UI</td></tr>
+        <tr><td>--transition-medium</td><td>0.4s ease-out-expo</td><td>Nav, reveals</td></tr>
+        <tr><td>--transition-slow</td><td>0.8s ease-out-expo</td><td>Hero / large entrances</td></tr>
+        <tr><td>ease-out-expo</td><td>cubic-bezier(.16,1,.3,1)</td><td>Signature easing</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- IMAGERY -->
+  <section class="sg-section" id="imagery">
+    <span class="sg-eyebrow">10 — Imagery &amp; Icons</span>
+    <h2>Imagery &amp; iconography</h2>
+    <p><strong>Photography:</strong> architectural, real-estate, and interior imagery with natural light and calm tones that sit comfortably beside the bone palette. Avoid stocky "handshake/headset" clichés. <strong>Icons:</strong> thin line icons (≈2–2.5px stroke, rounded caps) in ink or emerald — never filled or multicolor. Keep figures and data in the ledger style (Fraunces + champagne).</p>
+  </section>
+
+  <!-- DO / DON'T -->
+  <section class="sg-section" id="dodont">
+    <span class="sg-eyebrow">11 — At a glance</span>
+    <h2>Do &amp; Don't</h2>
+    <div class="sg-dd">
+      <div class="sg-dd-col do">
+        <h4>Do</h4>
+        <ul>
+          <li>Lead with bone + ink; use emerald as the one accent</li>
+          <li>Let whitespace and hairlines carry structure</li>
+          <li>Set headlines in Fraunces, labels in mono</li>
+          <li>Reserve champagne for figures and crop details</li>
+          <li>Keep CTAs to one ink primary per view</li>
+        </ul>
+      </div>
+      <div class="sg-dd-col dont">
+        <h4>Don't</h4>
+        <ul>
+          <li>Reintroduce navy/gold (the old DSCR palette)</li>
+          <li>Use rounded corners over 4px or drop-shadows for "pop"</li>
+          <li>Set body copy in champagne or in the serif</li>
+          <li>Stack multiple loud CTAs or gradients</li>
+          <li>Use emoji as primary iconography in chrome</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE -->
+  <section class="sg-section" id="compliance">
+    <span class="sg-eyebrow">12 — Compliance &amp; Legal</span>
+    <h2>Legal identity &amp; disclosures</h2>
+    <p><strong>United Trust Mortgage</strong> is a DBA of <strong>UTM Financial, LLC</strong> — <strong>NMLS #2591548</strong>. Always present the brand with its legal entity in footers, applications, and legal pages, and include the <strong>Equal Housing Lender</strong> mark/notice.</p>
+    <h3>Standing facts</h3>
+    <table class="sg-table">
+      <thead><tr><th>Item</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Legal entity</td><td>UTM Financial, LLC (United Trust Mortgage is a DBA)</td></tr>
+        <tr><td>NMLS</td><td>#2591548 · verify via NMLS Consumer Access</td></tr>
+        <tr><td>Phone</td><td>(818) 447-7035</td></tr>
+        <tr><td>Email</td><td>info@myunitedtrust.com</td></tr>
+        <tr><td>Address</td><td>1308 E Colorado Blvd #2248, Pasadena, CA 91106</td></tr>
+        <tr><td>Policies</td><td><a href="privacy.html" style="color:var(--emerald);text-decoration:underline;">Privacy</a> · <a href="terms.html" style="color:var(--emerald);text-decoration:underline;">Terms</a> · <a href="wireless.html" style="color:var(--emerald);text-decoration:underline;">Wireless</a> · <a href="econsent.html" style="color:var(--emerald);text-decoration:underline;">E-Consent</a></td></tr>
+      </tbody>
+    </table>
+    <div class="sg-callout">Any lead form that collects a phone number must carry the standard TCPA consent disclosure naming <strong>United Trust Mortgage, UTM Financial, LLC</strong>, and link the four policies above — matching the hero "See If You Qualify" form.</div>
+  </section>
+
+</div>
+</body>
+</html>
