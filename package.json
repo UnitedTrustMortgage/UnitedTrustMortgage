@@ -1,0 +1,11 @@
+{
+  "name": "unitedtrustmortgage-site",
+  "private": true,
+  "description": "United Trust Mortgage marketing site + operator quote builder. Netlify Functions in netlify/functions/ pull dependencies from here. NOTE: intentionally NOT \"type\":\"module\" — the legacy submit-lead.js / fred-proxy.js functions are CommonJS; the quote-builder functions use the .mjs extension so they're ESM regardless.",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

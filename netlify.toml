@@ -7,6 +7,67 @@
 [functions]
   node_bundler = "esbuild"
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Quote-builder API rewrites — friendlier paths to the Netlify Functions.
+# Host-agnostic + force=true so they resolve on BOTH www and the quotes.*
+# subdomain, and take priority over the subdomain catch-all further down.
+#   /api/auth/login      → auth-login
+#   /api/auth/me         → auth-me
+#   /api/auth/logout     → auth-logout
+#   /api/quotes/*        → quotes        (operator CRUD; needs a valid session)
+#   /api/public/quotes/* → public-quotes (borrower fetch + select; token gated)
+# ─────────────────────────────────────────────────────────────────────────────
+[[redirects]]
+  from = "/api/auth/login"
+  to = "/.netlify/functions/auth-login"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/me"
+  to = "/.netlify/functions/auth-me"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/logout"
+  to = "/.netlify/functions/auth-logout"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/quotes/*"
+  to = "/.netlify/functions/quotes/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/public/quotes/*"
+  to = "/.netlify/functions/public-quotes/:splat"
+  status = 200
+  force = true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Borrower subdomain: quotes.myunitedtrust.com/<token>
+# A clean token URL renders the borrower view (q.html); q.js reads the token
+# from the path. These rewrites are NOT forced, so real static files (e.g.
+# /quotes/q.css, /styles.css) are served directly rather than mistaken for a
+# token — the borrower/operator HTML references assets by absolute path so they
+# always hit a real file. The /api/* rules above (forced) keep working here too.
+# Requires DNS: CNAME `quotes` → the Netlify site + add the custom domain in
+# Netlify (see quotes/README.md).
+# ─────────────────────────────────────────────────────────────────────────────
+[[redirects]]
+  from = "https://quotes.myunitedtrust.com/"
+  to = "/quotes/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://quotes.myunitedtrust.com/*"
+  to = "/quotes/q.html"
+  status = 200
+
 # Pretty URLs for static folders (so /blog/ resolves to /blog/index.html)
 [[redirects]]
   from = "/blog"
@@ -32,3 +93,10 @@
   from = "/market-data"
   to = "/market-data/index.html"
   status = 200
+
+# Quote-builder HTML must never be cached — operators/borrowers always get the
+# latest UI on reload.
+[[headers]]
+  for = "/quotes/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

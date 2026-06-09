@@ -1,0 +1,609 @@
+/* ============================================================
+   UTM SITE — Operator quote builder
+   Uses the UTM "Editorial Private Bank" palette from styles.css.
+   ============================================================ */
+
+.qb-page {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-main);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* The display rules below (.qb-login / .qb-app are grid) would otherwise
+   override the [hidden] attribute that builder.js toggles to switch screens,
+   leaving the login screen visible above the app after sign-in. Make hidden win. */
+.qb-login[hidden],
+.qb-app[hidden] { display: none !important; }
+
+/* ── Login ──────────────────────────────────────────────────── */
+.qb-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.qb-login-card {
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(180deg, rgba(20, 33, 27, 0.85), rgba(11, 20, 16, 0.95));
+  border: 1px solid var(--line-strong);
+  padding: 38px 38px 32px;
+}
+.qb-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.qb-brand-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--champagne);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.qb-brand-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--bone);
+  letter-spacing: -0.01em;
+}
+.qb-brand-sub {
+  font-size: 11px;
+  color: var(--champagne);
+  letter-spacing: 0.2em;
+  margin-top: 2px;
+}
+.qb-login-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 300;
+  color: var(--bone);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.qb-login-sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.qb-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.qb-pass-input {
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  padding: 14px 16px;
+}
+.qb-login-error {
+  background: rgba(180, 60, 60, 0.15);
+  border: 1px solid #b13e3e;
+  color: #f0c8c8;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.qb-login-help {
+  margin-top: 22px;
+  color: var(--muted-faint);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+/* ── App shell ──────────────────────────────────────────────── */
+.qb-app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}
+
+/* Topbar */
+.qb-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px clamp(20px, 4vw, 40px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(11, 20, 16, 0.85);
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  backdrop-filter: blur(8px);
+}
+.qb-topbar-left,
+.qb-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.qb-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.qb-topbar-brand .qb-brand-mark { width: 32px; height: 32px; font-size: 12px; }
+.qb-topbar-brand .qb-brand-name { font-size: 14.5px; }
+.qb-topbar-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--champagne);
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+  margin-left: 6px;
+}
+.qb-who {
+  font-size: 12px;
+  color: var(--muted);
+}
+.qb-who strong { color: var(--bone); font-weight: 500; }
+.qb-link-btn {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 6px;
+  text-decoration: underline;
+  text-decoration-color: var(--muted-faint);
+  text-underline-offset: 3px;
+}
+.qb-link-btn:hover { color: var(--champagne); }
+
+/* Layout: form column + preview rail */
+.qb-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 0;
+  align-items: start;
+}
+@media (max-width: 1100px) {
+  .qb-layout { grid-template-columns: 1fr; }
+}
+
+.qb-form-col {
+  padding: 36px clamp(20px, 4vw, 56px);
+  max-width: 980px;
+}
+.qb-rail {
+  border-left: 1px solid var(--line);
+  padding: 36px clamp(18px, 2.5vw, 28px);
+  min-height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
+  background: rgba(20, 33, 27, 0.35);
+  align-self: stretch;
+}
+@media (max-width: 1100px) {
+  .qb-rail {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    position: static;
+  }
+}
+
+/* Page heading */
+.qb-page-head {
+  margin-bottom: 36px;
+}
+.qb-crumbs {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--muted-faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.qb-crumbs a { color: var(--champagne); text-decoration: none; }
+.qb-crumbs a:hover { color: var(--bone); }
+.qb-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.5vw, 48px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.qb-h1 em { color: var(--champagne); font-style: italic; font-weight: 300; }
+
+/* Section */
+.qb-section {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+.qb-section:last-of-type { border-bottom: 0; }
+.qb-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.qb-section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+}
+.qb-section-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--champagne);
+  margin-right: 10px;
+  letter-spacing: 0.06em;
+}
+.qb-section-hint {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-faint);
+}
+
+/* Fields grid */
+.qb-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 22px;
+}
+@media (max-width: 640px) {
+  .qb-fields { grid-template-columns: 1fr; }
+}
+.qb-field { display: flex; flex-direction: column; gap: 8px; }
+.qb-field.qb-full { grid-column: 1 / -1; }
+.qb-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.qb-label .qb-req { color: var(--champagne); margin-left: 3px; }
+.qb-hint {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+.qb-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.qb-input,
+.qb-select,
+.qb-textarea {
+  background: rgba(244, 241, 232, 0.04);
+  border: 1px solid var(--line);
+  color: var(--bone);
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 14px;
+  font-family: var(--font-main);
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+.qb-input:focus,
+.qb-select:focus,
+.qb-textarea:focus {
+  outline: none;
+  border-color: var(--champagne);
+  background: rgba(244, 241, 232, 0.07);
+}
+.qb-input.qb-mono,
+.qb-select.qb-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.qb-textarea { resize: vertical; min-height: 80px; font-family: var(--font-main); }
+.qb-input::placeholder { color: var(--muted-faint); }
+
+.qb-input-wrap { position: relative; }
+.qb-prefix,
+.qb-suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+.qb-prefix { left: 12px; }
+.qb-suffix { right: 12px; }
+.qb-with-prefix { padding-left: 24px; }
+.qb-with-suffix { padding-right: 26px; }
+
+/* Chips */
+.qb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.qb-chip {
+  background: rgba(244, 241, 232, 0.04);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.qb-chip:hover { border-color: var(--line-strong); color: var(--bone); }
+.qb-chip.qb-chip-on {
+  background: var(--champagne);
+  border-color: var(--champagne);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Toggle */
+.qb-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+}
+.qb-toggle input { display: none; }
+.qb-toggle-slot {
+  width: 36px; height: 20px;
+  background: rgba(244, 241, 232, 0.1);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.2s;
+}
+.qb-toggle-slot::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: var(--muted);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+.qb-toggle input:checked ~ .qb-toggle-slot {
+  background: var(--emerald);
+  border-color: var(--emerald-bright);
+}
+.qb-toggle input:checked ~ .qb-toggle-slot::after {
+  transform: translateX(16px);
+  background: var(--bone);
+}
+
+/* Buttons */
+.qb-btn {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--bone);
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.qb-btn:hover:not(:disabled) {
+  background: rgba(201, 169, 97, 0.1);
+  border-color: var(--champagne);
+}
+.qb-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.qb-btn-primary {
+  background: var(--champagne);
+  color: var(--ink);
+  border-color: var(--champagne);
+}
+.qb-btn-primary:hover:not(:disabled) {
+  background: var(--bone);
+  border-color: var(--bone);
+}
+.qb-btn-block { width: 100%; }
+.qb-btn-ghost {
+  background: none;
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+}
+.qb-btn-danger {
+  color: #f0c8c8;
+  border-color: rgba(180, 60, 60, 0.4);
+}
+.qb-btn-danger:hover:not(:disabled) { background: rgba(180, 60, 60, 0.15); }
+
+/* Options list */
+.qb-opts { display: grid; gap: 16px; }
+.qb-opt {
+  background: rgba(244, 241, 232, 0.03);
+  border: 1px solid var(--line);
+  padding: 20px;
+}
+.qb-opt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.qb-opt-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--bone);
+}
+.qb-opt-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--champagne);
+  letter-spacing: 0.16em;
+}
+
+/* Rail */
+.qb-rail-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-bottom: 8px;
+}
+.qb-rail-h {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 18px;
+}
+.qb-rail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13px;
+}
+.qb-rail-row:last-child { border-bottom: 0; }
+.qb-rail-row .lbl { color: var(--muted); }
+.qb-rail-row .val { font-family: var(--font-mono); color: var(--bone); font-variant-numeric: tabular-nums; }
+.qb-rail-actions {
+  margin-top: 22px;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+/* Save toast */
+.qb-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--emerald);
+  color: var(--bone);
+  padding: 12px 18px;
+  font-size: 13px;
+  border: 1px solid var(--emerald-bright);
+  z-index: 50;
+}
+.qb-toast.qb-toast-err {
+  background: #6b1f1f;
+  border-color: #d97070;
+}
+
+/* Share link box */
+.qb-share-box {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.qb-share-box input {
+  flex: 1;
+  background: rgba(244, 241, 232, 0.06);
+  border: 1px solid var(--line);
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 10px 12px;
+}
+
+/* Quote list (dashboard) */
+.qb-dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+}
+.qb-dash-table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.qb-dash-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.qb-dash-table tr:hover td { background: rgba(244, 241, 232, 0.03); }
+.qb-dash-table .qb-status {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.qb-status-draft    { color: var(--muted); }
+.qb-status-sent     { color: var(--champagne); }
+.qb-status-selected { color: var(--emerald-bright); }
+
+.qb-empty {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  margin-top: 18px;
+}
+
+/* Dashboard horizontal scroll — the table carries many columns. */
+.qb-dash-scroll {
+  margin-top: 18px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+.qb-dash-scroll .qb-dash-table { margin-top: 0; min-width: 1080px; }
+.qb-dash-table th,
+.qb-dash-table td { white-space: nowrap; }
+.qb-dash-table td.qb-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.qb-cell-link { color: var(--bone); text-decoration: none; }
+.qb-cell-link:hover {
+  color: var(--champagne);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── LO-only callout — wholesale lender, price-to-me, private notes ──────────
+   Warm, framed, and badged so it reads as internal and never borrower-facing. */
+.qb-section.qb-lo {
+  background: linear-gradient(180deg, rgba(201, 169, 97, 0.07), rgba(201, 169, 97, 0.025));
+  border: 1px solid rgba(201, 169, 97, 0.28);
+  border-left: 3px solid var(--champagne);
+  padding: 22px 22px 26px;
+  margin-bottom: 32px;
+}
+.qb-lo-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.qb-lo-badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  background: var(--champagne);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.qb-lo-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--bone);
+}
+.qb-lo-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-top: 2px;
+}
