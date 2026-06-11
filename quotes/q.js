@@ -128,7 +128,7 @@
             ${
               titleMentionsBorrower(quote.title || '', quote.borrowerName)
                 ? ''
-                : ` <em>— ${escapeHtml(quote.borrowerName)}</em>`
+                : ` <span class="q-muted">— ${escapeHtml(quote.borrowerName)}</span>`
             }
           </h1>
           <p class="q-subhead">
@@ -237,13 +237,39 @@
     const hasTI = ctx.monthlyTaxes != null || ctx.monthlyInsurance != null;
     const showTotal = ctx.escrowed && hasTI;
 
+    // Purchase-only: resolve which price drives THIS card (per-option
+    // override wins) — mirrors LoanComparison's OptionCard so the price and
+    // down payment are visible without expanding the breakdown.
+    const isPurchase = ctx.loanPurpose === 'purchase';
+    const effectivePurchasePrice =
+      isPurchase && opt.purchasePriceOverride != null && opt.purchasePriceOverride > 0
+        ? opt.purchasePriceOverride
+        : isPurchase
+        ? ctx.purchasePrice
+        : null;
+    const priceIsOverridden =
+      isPurchase &&
+      opt.purchasePriceOverride != null &&
+      opt.purchasePriceOverride > 0 &&
+      opt.purchasePriceOverride !== ctx.purchasePrice;
+    const downPayment =
+      isPurchase && effectivePurchasePrice != null && effectivePurchasePrice > 0
+        ? Math.max(0, effectivePurchasePrice - (opt.loanAmount ?? 0))
+        : null;
+    const downPaymentPct =
+      downPayment != null && effectivePurchasePrice
+        ? (downPayment / effectivePurchasePrice) * 100
+        : null;
+
     const expanded = !!state.expanded[opt.id];
 
     return `
       <article class="${cardClasses}">
         <div class="q-card-head">
           <div class="q-opt-num"><strong>${idx + 1}</strong>/${total}</div>
-          ${badge ? `<span class="q-badge ${badge.className}">${escapeHtml(badge.label)}</span>` : ''}
+          <div class="q-badges">
+            ${badge ? `<span class="q-badge ${badge.className}">${escapeHtml(badge.label)}</span>` : ''}
+          </div>
         </div>
         ${opt.label ? `<div class="q-opt-name">${escapeHtml(opt.label)}</div>` : ''}
         <div class="q-opt-note ${opt.notes ? '' : 'q-opt-note-empty'}">
@@ -291,18 +317,40 @@
           `
               : ''
           }
+          ${
+            isPurchase && effectivePurchasePrice != null && effectivePurchasePrice > 0
+              ? `
+            <div class="q-stat">
+              <span class="q-stat-label">Purchase price${priceIsOverridden ? '<span class="q-stat-tag" title="Per-option override">override</span>' : ''}</span>
+              <span class="q-stat-val">${fmtMoney(effectivePurchasePrice)}</span>
+            </div>
+          `
+              : ''
+          }
+          ${
+            isPurchase && downPayment != null
+              ? `
+            <div class="q-stat">
+              <span class="q-stat-label">Down payment</span>
+              <span class="q-stat-val">${fmtMoney(downPayment)}${downPaymentPct != null ? `<span class="q-sub">${downPaymentPct.toFixed(1)}%</span>` : ''}</span>
+            </div>
+          `
+              : ''
+          }
           <div class="q-stat">
             <span class="q-stat-label">Lender credit</span>
-            <span class="q-stat-val ${(opt.lenderCredit ?? 0) > 0 ? 'q-good' : ''}">
+            <span class="q-stat-val ${(opt.lenderCredit ?? 0) > 0 ? 'q-good' : 'q-dim'}">
               ${(opt.lenderCredit ?? 0) > 0 ? `+${fmtMoney(opt.lenderCredit)}` : '—'}
             </span>
           </div>
           ${
-            ctx.loanPurpose === 'purchase' && (opt.sellerCredit ?? 0) > 0
+            isPurchase
               ? `
             <div class="q-stat">
               <span class="q-stat-label">Seller credit</span>
-              <span class="q-stat-val q-good">+${fmtMoney(opt.sellerCredit)}</span>
+              <span class="q-stat-val ${(opt.sellerCredit ?? 0) > 0 ? 'q-good' : 'q-dim'}">
+                ${(opt.sellerCredit ?? 0) > 0 ? `+${fmtMoney(opt.sellerCredit)}` : '—'}
+              </span>
             </div>
           `
               : ''
@@ -311,7 +359,7 @@
             <span class="q-stat-label">Points</span>
             <span class="q-stat-val">
               ${opt.points != null ? Number(opt.points).toFixed(2) : '—'}
-              <span class="q-stat-sub">${fmtMoney(opt.pointsCost ?? 0)}</span>
+              <span class="q-sub">${fmtMoney(opt.pointsCost ?? 0)}</span>
             </span>
           </div>
         </div>
