@@ -1,11 +1,17 @@
 /* ============================================================
-   UTM SITE — Borrower quote view (public)
-   Uses the UTM "Editorial Private Bank" palette from styles.css.
+   UTM — Borrower quote view (public)
+   Light "Editorial Private Bank · BONE" palette from styles.css:
+   bone page bg · ink text · paper cards · emerald accents ·
+   champagne strictly tertiary (recommended badge, PPP marker).
    ============================================================ */
 
 .q-page {
-  background: var(--ink);
-  color: var(--bone);
+  background:
+    radial-gradient(ellipse 1100px 700px at 90% -5%, var(--emerald-glow) 0%, transparent 55%),
+    radial-gradient(ellipse 800px 600px at -5% 90%, var(--champagne-bloom) 0%, transparent 60%),
+    var(--bone);
+  background-attachment: fixed;
+  color: var(--ink);
   font-family: var(--font-main);
   min-height: 100vh;
   line-height: 1.55;
@@ -18,7 +24,7 @@
   justify-content: space-between;
   padding: 18px clamp(20px, 5vw, 56px);
   border-bottom: 1px solid var(--line);
-  background: rgba(11, 20, 16, 0.7);
+  background: rgba(244, 241, 232, 0.88);
   backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
@@ -28,7 +34,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--bone);
+  color: var(--ink);
   text-decoration: none;
 }
 .q-brand-mark {
@@ -36,8 +42,8 @@
   height: 36px;
   display: grid;
   place-items: center;
-  background: var(--champagne);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--bone);
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 13px;
@@ -50,7 +56,7 @@
 }
 .q-topbar-tag {
   font-size: 11px;
-  color: var(--champagne);
+  color: var(--emerald);
   letter-spacing: 0.18em;
 }
 
@@ -65,13 +71,13 @@
   display: grid;
   place-items: center;
   min-height: 60vh;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 15px;
 }
 .q-error h1 {
   font-family: var(--font-display);
   font-size: clamp(28px, 5vw, 44px);
-  color: var(--bone);
+  color: var(--ink);
   margin-bottom: 10px;
   text-align: center;
 }
@@ -90,7 +96,7 @@
 .q-eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--champagne);
+  color: var(--emerald);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   margin-bottom: 14px;
@@ -101,22 +107,22 @@
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: var(--bone);
+  color: var(--ink);
 }
 .q-headline em {
   font-style: italic;
-  color: var(--muted);
+  color: var(--emerald);
   font-weight: 300;
 }
 .q-subhead {
   margin-top: 18px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 15.5px;
   max-width: 56ch;
 }
 .q-borrower-card {
-  background: linear-gradient(180deg, rgba(31, 91, 74, 0.12), rgba(11, 20, 16, 0));
-  border: 1px solid var(--line-strong);
+  background: linear-gradient(180deg, var(--emerald-glow), rgba(31, 91, 74, 0));
+  border: 1px solid var(--line-emerald);
   padding: 22px 24px;
   display: grid;
   gap: 14px;
@@ -128,13 +134,13 @@
 .q-borrower-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--muted-faint);
+  color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
 .q-borrower-val {
   font-size: 14.5px;
-  color: var(--bone);
+  color: var(--ink);
 }
 
 /* ── Toolbar ────────────────────────────────────────────────── */
@@ -148,7 +154,7 @@
 }
 .q-seg {
   display: inline-flex;
-  background: rgba(244, 241, 232, 0.04);
+  background: var(--paper);
   border: 1px solid var(--line);
   padding: 4px;
   gap: 2px;
@@ -156,37 +162,37 @@
 .q-seg button {
   background: none;
   border: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   padding: 8px 14px;
   font: inherit;
   font-size: 12.5px;
   cursor: pointer;
   letter-spacing: 0.02em;
 }
-.q-seg button:hover { color: var(--bone); }
+.q-seg button:hover { color: var(--ink); }
 .q-seg button.q-active {
-  background: var(--champagne);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--bone);
   font-weight: 500;
 }
 .q-sort-by {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12.5px;
 }
 .q-sort-by select {
-  background: rgba(244, 241, 232, 0.04);
-  color: var(--bone);
-  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
   padding: 8px 28px 8px 12px;
   font: inherit;
   font-size: 12.5px;
   appearance: none;
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
   background-position:
     calc(100% - 16px) 50%,
     calc(100% - 11px) 50%;
@@ -194,7 +200,7 @@
   background-repeat: no-repeat;
 }
 .q-tool-count {
-  color: var(--muted-faint);
+  color: var(--text-soft);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -207,7 +213,7 @@
   gap: 18px;
 }
 .q-card {
-  background: linear-gradient(180deg, rgba(20, 33, 27, 0.6), rgba(11, 20, 16, 0.9));
+  background: var(--paper);
   border: 1px solid var(--line);
   padding: 26px 22px;
   display: flex;
@@ -218,15 +224,15 @@
 .q-card:hover {
   border-color: var(--line-strong);
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 40px rgba(11, 20, 16, 0.10);
 }
 .q-card.q-recommended {
-  background: linear-gradient(180deg, rgba(201, 169, 97, 0.12), rgba(11, 20, 16, 0.9));
+  background: linear-gradient(180deg, rgba(201, 169, 97, 0.14), var(--paper) 55%);
   border-color: var(--champagne);
 }
 .q-card.q-selected {
-  border-color: var(--emerald-bright);
-  box-shadow: 0 0 0 2px var(--emerald-bright), 0 12px 40px rgba(31, 91, 74, 0.3);
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 2px var(--emerald), 0 12px 40px rgba(31, 91, 74, 0.18);
 }
 .q-card.q-dimmed { opacity: 0.45; }
 
@@ -239,10 +245,10 @@
 .q-opt-num {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .q-opt-num strong {
-  color: var(--bone);
+  color: var(--ink);
   font-weight: 500;
 }
 .q-badge {
@@ -252,21 +258,23 @@
   text-transform: uppercase;
   padding: 4px 8px;
   border: 1px solid var(--champagne);
-  color: var(--champagne);
+  color: #8a6d2f;
+  background: rgba(201, 169, 97, 0.12);
 }
 .q-badge.q-badge-flex {
-  border-color: var(--emerald-bright);
-  color: var(--emerald-bright);
+  border-color: var(--emerald);
+  color: var(--emerald);
+  background: var(--emerald-glow);
 }
 
 .q-opt-name {
   font-size: 14px;
-  color: var(--bone);
+  color: var(--ink);
   margin-bottom: 4px;
   font-weight: 500;
 }
 .q-opt-note {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12.5px;
   min-height: 1.4em;
   margin-bottom: 14px;
@@ -283,13 +291,13 @@
   font-size: clamp(46px, 6vw, 58px);
   font-weight: 300;
   letter-spacing: -0.02em;
-  color: var(--bone);
+  color: var(--ink);
   line-height: 1;
 }
 .q-rate-pct {
   font-family: var(--font-display);
   font-size: 24px;
-  color: var(--champagne);
+  color: var(--emerald);
   margin-left: 2px;
 }
 .q-rate-label {
@@ -297,17 +305,17 @@
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--muted);
+  color: var(--text-muted);
   margin-top: 6px;
 }
 .q-apr {
   margin-top: 10px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .q-num {
   font-family: var(--font-mono);
-  color: var(--bone);
+  color: var(--ink);
 }
 
 .q-stats { display: grid; gap: 10px; margin-bottom: 16px; }
@@ -320,18 +328,18 @@
   font-size: 13px;
 }
 .q-stat:last-child { border-bottom: 0; padding-bottom: 0; }
-.q-stat-label { color: var(--muted); }
+.q-stat-label { color: var(--text-muted); }
 .q-stat-val {
   font-family: var(--font-mono);
-  color: var(--bone);
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .q-stat-val.q-big { font-size: 17px; font-weight: 500; }
-.q-stat-val.q-good { color: var(--emerald-bright); }
+.q-stat-val.q-good { color: var(--emerald); }
 .q-stat-sub {
   display: block;
   font-size: 10.5px;
-  color: var(--muted-faint);
+  color: var(--text-soft);
   margin-top: 2px;
   text-align: right;
 }
@@ -341,24 +349,24 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: rgba(244, 241, 232, 0.03);
+  background: var(--bone-2);
   border: 1px solid var(--line);
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   margin-bottom: 16px;
 }
-.q-ppp-row.q-has-ppp { background: rgba(201, 169, 97, 0.08); border-color: var(--champagne-soft); }
-.q-ppp-row.q-no-ppp  { background: rgba(31, 91, 74, 0.12); border-color: rgba(31, 91, 74, 0.4); }
+.q-ppp-row.q-has-ppp { background: rgba(201, 169, 97, 0.14); border-color: rgba(201, 169, 97, 0.5); }
+.q-ppp-row.q-no-ppp  { background: var(--emerald-glow); border-color: var(--line-emerald); }
 .q-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--muted);
+  background: var(--text-muted);
   flex-shrink: 0;
 }
 .q-dot.q-ppp { background: var(--champagne); }
-.q-dot.q-nop { background: var(--emerald-bright); }
-.q-ppp-label { color: var(--bone); font-weight: 500; }
+.q-dot.q-nop { background: var(--emerald); }
+.q-ppp-label { color: var(--ink); font-weight: 500; }
 .q-ppp-term { margin-left: auto; font-family: var(--font-mono); font-size: 11px; }
 
 /* ── Breakdown ──────────────────────────────────────────────── */
@@ -381,7 +389,7 @@
 .q-breakdown-head {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--muted-faint);
+  color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   margin-bottom: 10px;
@@ -403,16 +411,16 @@
   padding-top: 10px;
   margin-top: 6px;
   font-weight: 600;
-  color: var(--bone);
+  color: var(--ink);
 }
-.q-bd-lbl { color: var(--muted); }
+.q-bd-lbl { color: var(--text-muted); }
 .q-bd-val {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-size: 12px;
-  color: var(--bone);
+  color: var(--ink);
 }
-.q-bd-val.q-good { color: var(--emerald-bright); }
+.q-bd-val.q-good { color: var(--emerald); }
 
 /* ── Card actions ───────────────────────────────────────────── */
 .q-card-actions {
@@ -425,7 +433,7 @@
 .q-btn {
   border: 1px solid var(--line-strong);
   background: transparent;
-  color: var(--bone);
+  color: var(--ink);
   padding: 11px 14px;
   font: inherit;
   font-size: 12.5px;
@@ -435,25 +443,26 @@
   transition: all 0.15s;
 }
 .q-btn:hover:not(:disabled) {
-  background: rgba(201, 169, 97, 0.1);
-  border-color: var(--champagne);
+  background: var(--emerald-glow);
+  border-color: var(--emerald);
 }
 .q-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .q-btn.q-primary {
-  background: var(--champagne);
-  color: var(--ink);
-  border-color: var(--champagne);
+  background: var(--ink);
+  color: var(--bone);
+  border-color: var(--ink);
   font-weight: 600;
   padding: 13px 14px;
   font-size: 13px;
 }
 .q-btn.q-primary:hover:not(:disabled) {
-  background: var(--bone);
-  border-color: var(--bone);
+  background: var(--emerald-deep);
+  border-color: var(--emerald-deep);
+  color: #ffffff;
 }
 .q-btn.q-selected {
   background: var(--emerald);
-  color: var(--bone);
+  color: #ffffff;
   border-color: var(--emerald);
   opacity: 1;
   cursor: default;
@@ -463,7 +472,7 @@
 .q-confirmation {
   margin-top: 32px;
   background: linear-gradient(135deg, var(--emerald-deep), var(--emerald));
-  border: 1px solid var(--emerald-bright);
+  border: 1px solid var(--emerald);
   padding: 26px 30px;
   display: flex;
   flex-direction: column;
@@ -481,7 +490,7 @@
   letter-spacing: -0.01em;
 }
 .q-confirmation-sub {
-  color: rgba(244, 241, 232, 0.85);
+  color: rgba(244, 241, 232, 0.88);
   font-size: 14.5px;
   max-width: 60ch;
 }
@@ -490,7 +499,7 @@
 .q-footer {
   border-top: 1px solid var(--line);
   padding: 32px clamp(20px, 5vw, 56px) 48px;
-  color: var(--muted-faint);
+  color: var(--text-soft);
   font-size: 12px;
   max-width: 1340px;
   margin: 60px auto 0;
@@ -503,5 +512,5 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.q-footer-meta a { color: var(--champagne); text-decoration: none; }
-.q-footer-meta a:hover { color: var(--bone); }
+.q-footer-meta a { color: var(--emerald); text-decoration: none; }
+.q-footer-meta a:hover { color: var(--ink); }

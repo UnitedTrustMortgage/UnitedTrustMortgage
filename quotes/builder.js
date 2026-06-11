@@ -439,21 +439,21 @@
               ${fieldMoney(isPurchase ? 'Loan amount' : 'Current loan balance', 'loanBalance', e.form.loanBalance, '195,000')}
             </div>
 
-            <div class="qb-ltv" style="margin-top:18px;padding:14px;background:rgba(244,241,232,0.03);border:1px solid var(--line)">
+            <div class="qb-ltv" style="margin-top:18px;padding:14px;background:var(--paper);border:1px solid var(--line)">
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-                <span style="font-size:12px;color:var(--muted)">Loan-to-value</span>
+                <span style="font-size:12px;color:var(--text-muted)">Loan-to-value</span>
                 <strong class="qb-input qb-mono" style="background:transparent;border:0;padding:0;width:auto;font-size:14px">${ltv ? ltv.toFixed(1) + '%' : '—'}</strong>
               </div>
-              <div style="height:6px;background:rgba(244,241,232,0.06);position:relative;overflow:hidden">
-                <div style="height:100%;width:${Math.min(ltv, 100)}%;background:${ltv > 80 ? '#b13e1c' : ltv > 70 ? 'var(--champagne)' : 'var(--emerald-bright)'};transition:width 0.25s"></div>
+              <div style="height:6px;background:rgba(11,20,16,0.08);position:relative;overflow:hidden">
+                <div style="height:100%;width:${Math.min(ltv, 100)}%;background:${ltv > 80 ? '#b13e1c' : ltv > 70 ? 'var(--champagne)' : 'var(--emerald)'};transition:width 0.25s"></div>
               </div>
             </div>
 
             ${
               isPurchase
                 ? `
-              <div style="margin-top:14px;padding:14px;background:rgba(244,241,232,0.03);border:1px solid var(--line)">
-                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Down payment</div>
+              <div style="margin-top:14px;padding:14px;background:var(--paper);border:1px solid var(--line)">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Down payment</div>
                 <div class="qb-fields">
                   ${fieldMoney('Amount', '__dpAmount', downPayment ?? '', '65,000')}
                   ${fieldPct('Percent of price', '__dpPct',
