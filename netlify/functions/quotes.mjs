@@ -104,7 +104,7 @@ async function listQuotes(operator) {
   if (revIds.length) {
     const { data: revs, error: rErr } = await supabase
       .from("loan_quote_revisions")
-      .select("id, loan_json, property_json")
+      .select("id, loan_json, property_json, options_json")
       .in("id", revIds);
     if (rErr) return err(500, rErr.message);
     revById = new Map((revs ?? []).map((r) => [r.id, r]));
@@ -114,10 +114,19 @@ async function listQuotes(operator) {
     const rev = revById.get(x.current_revision_id) || {};
     const loan = rev.loan_json || {};
     const property = rev.property_json || {};
+    // The quoted loan amount lives on the options (each card can differ);
+    // show the first priced option, falling back to the intake balance.
+    const options = Array.isArray(rev.options_json) ? rev.options_json : [];
+    const firstPriced = options.find((o) => Number(o?.loanAmount) > 0);
+    const loanAmount = firstPriced
+      ? Number(firstPriced.loanAmount)
+      : property.loanBalance != null
+        ? Number(property.loanBalance)
+        : null;
     return {
       ...x,
       transaction_type: transactionLabel(loan.loanPurpose ?? loan.purpose),
-      loan_amount: property.loanBalance != null ? Number(property.loanBalance) : null,
+      loan_amount: loanAmount,
       property_state: property.state || null,
     };
   });

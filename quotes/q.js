@@ -297,6 +297,16 @@
               ${(opt.lenderCredit ?? 0) > 0 ? `+${fmtMoney(opt.lenderCredit)}` : '—'}
             </span>
           </div>
+          ${
+            ctx.loanPurpose === 'purchase' && (opt.sellerCredit ?? 0) > 0
+              ? `
+            <div class="q-stat">
+              <span class="q-stat-label">Seller credit</span>
+              <span class="q-stat-val q-good">+${fmtMoney(opt.sellerCredit)}</span>
+            </div>
+          `
+              : ''
+          }
           <div class="q-stat">
             <span class="q-stat-label">Points</span>
             <span class="q-stat-val">
@@ -342,20 +352,35 @@
   function renderBreakdown(opt, _idx, ctx, expanded) {
     const isPurchase = ctx.loanPurpose === 'purchase';
     const lenderCredit = opt.lenderCredit ?? 0;
+    // Seller credit only makes sense on purchases — refi math ignores it
+    // even if a stale value is present on the option.
+    const sellerCredit = isPurchase ? opt.sellerCredit ?? 0 : 0;
     const lenderFees = opt.lenderFees ?? 0;
     const thirdPartyFees = opt.thirdPartyFees ?? 0;
     const taxesAndGov = opt.taxesAndGov ?? 0;
     const prepaidsAndEscrow = opt.prepaidsAndEscrow ?? 0;
     const pointsCost = opt.pointsCost ?? 0;
 
+    // Per-card purchase-price override falls back to the quote-level price.
+    const effectivePurchasePrice =
+      isPurchase && opt.purchasePriceOverride != null && opt.purchasePriceOverride > 0
+        ? opt.purchasePriceOverride
+        : ctx.purchasePrice;
+    const priceIsOverridden =
+      isPurchase &&
+      opt.purchasePriceOverride != null &&
+      opt.purchasePriceOverride > 0 &&
+      opt.purchasePriceOverride !== ctx.purchasePrice;
+
     const pivot = isPurchase
-      ? ctx.purchasePrice ?? opt.loanAmount
+      ? effectivePurchasePrice ?? opt.loanAmount
       : ctx.existingBalance ?? 0;
 
     const cashFlow =
       (opt.loanAmount ?? 0) -
       pivot +
-      lenderCredit -
+      lenderCredit +
+      sellerCredit -
       lenderFees -
       thirdPartyFees -
       taxesAndGov -
@@ -369,7 +394,8 @@
         : `− ${fmtMoney(-cashFlow, true)}`;
 
     const totalClosingCosts =
-      lenderFees + thirdPartyFees + taxesAndGov + prepaidsAndEscrow + pointsCost - lenderCredit;
+      lenderFees + thirdPartyFees + taxesAndGov + prepaidsAndEscrow + pointsCost -
+      lenderCredit - sellerCredit;
     const tccValue =
       totalClosingCosts === 0
         ? '—'
@@ -378,8 +404,8 @@
         : `+ ${fmtMoney(-totalClosingCosts, true)}`;
 
     const downPayment =
-      isPurchase && ctx.purchasePrice != null && ctx.purchasePrice > 0
-        ? Math.max(0, ctx.purchasePrice - (opt.loanAmount ?? 0))
+      isPurchase && effectivePurchasePrice != null && effectivePurchasePrice > 0
+        ? Math.max(0, effectivePurchasePrice - (opt.loanAmount ?? 0))
         : null;
 
     return `
@@ -388,8 +414,8 @@
         ${bdRow('Loan amount', `+ ${fmtMoney(opt.loanAmount ?? 0)}`)}
         ${
           isPurchase
-            ? ctx.purchasePrice != null && ctx.purchasePrice > 0
-              ? bdRow('Purchase price', `− ${fmtMoney(ctx.purchasePrice)}`) +
+            ? effectivePurchasePrice != null && effectivePurchasePrice > 0
+              ? bdRow(priceIsOverridden ? 'Purchase price (override)' : 'Purchase price', `− ${fmtMoney(effectivePurchasePrice)}`) +
                 (downPayment != null ? bdRow('Down payment', fmtMoney(downPayment)) : '')
               : ''
             : ctx.existingBalance != null && ctx.existingBalance > 0
@@ -401,6 +427,15 @@
           lenderCredit > 0 ? `+ ${fmtMoney(lenderCredit)}` : '—',
           { good: lenderCredit > 0 },
         )}
+        ${
+          isPurchase
+            ? bdRow(
+                'Seller credit',
+                sellerCredit > 0 ? `+ ${fmtMoney(sellerCredit)}` : '—',
+                { good: sellerCredit > 0 },
+              )
+            : ''
+        }
         ${bdRow('Lender fees', signedNeg(opt.lenderFees))}
         ${bdRow('Third party fees', signedNeg(opt.thirdPartyFees))}
         ${bdRow("Taxes & gov't", signedNeg(opt.taxesAndGov))}
