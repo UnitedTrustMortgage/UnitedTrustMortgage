@@ -58,7 +58,7 @@ Set these in **Site settings → Environment variables**:
 
 | Var | Value | Notes |
 |---|---|---|
-| `SUPABASE_URL` | `https://jvdhhvwljocmimqgbtgn.supabase.co` | Cadence CRM Supabase project |
+| `SUPABASE_URL` | Cadence CRM project URL (Supabase dashboard → Project Settings → API) | value not written here — Netlify secret scanning fails the build if an env-var value appears in repo files |
 | `SUPABASE_SERVICE_ROLE_KEY` | (from Supabase dashboard → Project Settings → API) | **Server-only — never exposed to the browser**, bypasses RLS |
 | `CRM_WEBHOOK_URL` | e.g. `https://crm.myunitedtrust.com/api/internal/notify-quote-selected` | Wherever cadence-crm is deployed |
 | `CRM_WEBHOOK_KEY` | A long random string | Must match `UTM_WEBHOOK_KEY` set in cadence-crm |

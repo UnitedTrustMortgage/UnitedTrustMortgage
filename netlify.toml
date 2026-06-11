@@ -7,6 +7,14 @@
 [functions]
   node_bundler = "esbuild"
 
+[build.environment]
+  # Netlify secret scanning fails the build if ANY site env-var value appears in
+  # repo/build files. These vars are non-secret config (a public Supabase project
+  # URL; SMS phone numbers that appear in code comments) — skip just them.
+  # Real secrets (SUPABASE_SERVICE_ROLE_KEY, TWILIO_AUTH_TOKEN, BENJI_API_KEY,
+  # CRM_WEBHOOK_KEY) are intentionally NOT listed and stay scanned.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,TWILIO_FROM,LEAD_SMS_TO,CRM_WEBHOOK_URL"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Quote-builder API rewrites — friendlier paths to the Netlify Functions.
 # Host-agnostic + force=true so they resolve on BOTH www and the quotes.*

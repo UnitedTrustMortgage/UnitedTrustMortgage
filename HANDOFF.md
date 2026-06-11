@@ -31,7 +31,7 @@ Netlify → **UnitedTrustMortgage** site → Site settings → Environment varia
 
 | Variable | Value |
 |---|---|
-| `SUPABASE_URL` | `https://jvdhhvwljocmimqgbtgn.supabase.co` |
+| `SUPABASE_URL` | the Cadence CRM project URL — Supabase dashboard → Project Settings → API |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → **Cadence CRM** project → Project Settings → API → **service_role** secret |
 | `CRM_WEBHOOK_URL` _(optional)_ | cadence-crm internal notify URL — fires email/SMS when a borrower picks an option |
 | `CRM_WEBHOOK_KEY` _(optional)_ | long random string; must match cadence-crm's `UTM_WEBHOOK_KEY` |
