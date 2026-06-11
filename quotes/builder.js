@@ -304,10 +304,7 @@
       <header class="qb-topbar">
         <div class="qb-topbar-left">
           <a href="/quotes/" class="qb-topbar-brand" data-nav="dashboard">
-            <span class="qb-brand-mark">UTM</span>
-            <div>
-              <div class="qb-brand-name">United Trust Mortgage</div>
-            </div>
+            <img src="/assets/utm-blue.png" alt="United Trust Mortgage" class="qb-brand-logo">
           </a>
           <span class="qb-topbar-tag">QUOTE BUILDER</span>
         </div>
