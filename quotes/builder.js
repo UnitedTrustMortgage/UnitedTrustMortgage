@@ -626,12 +626,18 @@
     document.querySelectorAll('[data-field]').forEach((el) => {
       el.addEventListener('input', () => updateField(el.dataset.field, parseInputValue(el)));
     });
-    // Chips
+    // Chips. updateField only re-renders for layout-driving keys (loanPurpose);
+    // for the rest (creditScore, propertyType, occupancy) nothing repaints, so
+    // flip the active chip in place — otherwise clicks look like they did
+    // nothing until an unrelated re-render reveals them.
     document.querySelectorAll('[data-chips]').forEach((wrap) => {
       const key = wrap.dataset.chips;
       wrap.querySelectorAll('button').forEach((btn) => {
         btn.addEventListener('click', () => {
           updateField(key, btn.dataset.val);
+          if (!wrap.isConnected) return; // a re-render replaced this DOM
+          wrap.querySelectorAll('button').forEach((b) =>
+            b.classList.toggle('qb-chip-on', b === btn));
         });
       });
     });
