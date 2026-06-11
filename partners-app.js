@@ -549,7 +549,12 @@
       { k: 'RATE',    v: f.fRate },
       { k: 'TERM',    v: f.fTerm },
     ]);
-    const statCols = Math.max(stats.length, 1);
+    // Long values ("12 Mo Bank Statement", "30 Year Fixed") step the type
+    // size down instead of clipping mid-word.
+    const statFont = (v) => {
+      const len = String(v || '').length;
+      return len <= 10 ? 18 : len <= 16 ? 16 : len <= 22 ? 14 : 12.5;
+    };
 
     canvas.innerHTML = `
       <div style="background:${t.bg}; color:${t.ink}; min-height:780px; display:flex; flex-direction:column; font-family:'Inter',sans-serif;">
@@ -581,16 +586,18 @@
           </div>
 
           <!-- Mono detail row -->
-          <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase; color:${t.muted};">
+          <div style="flex-shrink:0; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase; color:${t.muted};">
             ${esc(programText)} · ${esc(loanTypeText)} · ${esc(f.fCloseDays || '18')} Days to Close
           </div>
 
-          <!-- Stat row -->
-          <div style="display:grid; grid-template-columns:repeat(${statCols}, 1fr); gap:10px; padding:14px 0; border-top:1px solid ${ruleColor}; border-bottom:1px solid ${ruleColor};">
+          <!-- Stat row — columns size to their content (a long PROGRAM gets the
+               room it needs); flex-shrink:0 so a tall flyer can never crush the
+               row and slice the values vertically. -->
+          <div style="flex-shrink:0; display:grid; grid-template-columns:repeat(${Math.max(stats.length, 1)}, minmax(0, auto)); justify-content:space-between; gap:10px 18px; padding:14px 0; border-top:1px solid ${ruleColor}; border-bottom:1px solid ${ruleColor};">
             ${stats.map(s => `
               <div style="min-width:0;">
                 <div style="font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.2em; text-transform:uppercase; color:${t.muted};">${esc(s.k)}</div>
-                <div style="font-family:'Fraunces',serif; font-size:18px; font-weight:500; margin-top:4px; letter-spacing:-0.015em; color:${t.ink}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(s.v)}</div>
+                <div style="font-family:'Fraunces',serif; font-size:${statFont(s.v)}px; font-weight:500; margin-top:4px; letter-spacing:-0.015em; color:${t.ink}; white-space:nowrap;">${esc(s.v)}</div>
               </div>
             `).join('')}
           </div>

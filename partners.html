@@ -814,16 +814,16 @@
     left: 0;
     width: 816px;
     height: 1056px;
-    transform: scale(calc(100% / 816 * 560 / 100));
+    /* 560 / 816 — frame width over native US-Letter width. This was a calc()
+       with a percentage, which newer Chrome resolves as a relative scale
+       (≈0.007 → microscopic preview); older browsers rejected it and used a
+       fallback. Use the constant directly. */
+    transform: scale(0.6863);
     transform-origin: top left;
     background: #FFFFFF;
     color: #1a2636;
     font-family: var(--font-main);
     overflow: hidden;
-  }
-  /* Fallback — if calc() in transform isn't supported, fall back to fixed */
-  @supports not (transform: scale(calc(100% / 816 * 560 / 100))) {
-    .flyer-canvas { transform: scale(0.6863); }
   }
   /* Responsive scale: when frame width drops below 560, scale shrinks */
   @media (max-width: 600px) {
