@@ -1427,7 +1427,10 @@
 
   // ── Helpers ────────────────────────────────────────────────────────
   function shareUrl(token) {
-    return `https://quotes.myunitedtrust.com/${encodeURIComponent(token)}`;
+    // Borrower view lives on the main domain at /quotes/q.html?t=<token>.
+    // (The quotes.myunitedtrust.com subdomain needs a DNS CNAME before it
+    // resolves; until then this main-domain URL works on the live deploy.)
+    return `${window.location.origin}/quotes/q.html?t=${encodeURIComponent(token)}`;
   }
 
   function copyShareLink(token) {
