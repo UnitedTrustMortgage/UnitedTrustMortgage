@@ -20,7 +20,7 @@
     data: null,           // { quote, revision }
     filter: 'all',        // 'all' | 'ppp' | 'noppp' | 'lowrate' | 'maxcash'
     sort: 'option',       // 'option' | 'payment' | 'rate' | 'nopoints' | 'noppp' | 'cash'
-    expanded: {},         // { [optionId]: true } — breakdown open state
+    expanded: false,      // breakdown open state — global, toggles every card at once
     submittingIndex: null,
     selectError: null,
     confirmation: null,   // { optionIndex, message }
@@ -261,7 +261,7 @@
         ? (downPayment / effectivePurchasePrice) * 100
         : null;
 
-    const expanded = !!state.expanded[opt.id];
+    const expanded = !!state.expanded;
 
     return `
       <article class="${cardClasses}">
@@ -561,11 +561,10 @@
         render();
       });
     }
-    // Breakdown toggles
+    // Breakdown toggle — expand/collapse every option card at once
     document.querySelectorAll('button[data-toggle]').forEach((b) => {
       b.addEventListener('click', () => {
-        const id = b.dataset.toggle;
-        state.expanded[id] = !state.expanded[id];
+        state.expanded = !state.expanded;
         render();
       });
     });
