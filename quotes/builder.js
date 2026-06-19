@@ -456,6 +456,10 @@
         return;
       }
     }
+    // Stored prepaids/totals can predate later edits to escrow, taxes,
+    // insurance, or the hazard formula itself — recompute non-overridden
+    // options so the editor opens with values that match the current inputs.
+    recalcPrepaidsAll();
     state.view = 'editor';
     render();
   }
@@ -1039,6 +1043,7 @@
     if (key === '__escrowed') {
       // Quick Fill's "Escrowed" is the inverse of escrowWaived.
       e.form.escrowWaived = !e.form.escrowWaived;
+      recalcPrepaidsAll();
       render();
       return;
     }
@@ -1055,7 +1060,9 @@
       return;
     }
     e.form[key] = !e.form[key];
-    if (key === 'escrowWaived') { render(); return; } // affects QF formula + escrowed mirror
+    // escrowWaived feeds calcPrepaids → recompute before re-render so the
+    // option cards reflect the new escrow state (QF formula + escrowed mirror).
+    if (key === 'escrowWaived') { recalcPrepaidsAll(); render(); return; }
     if (key === 'allowPPP') {
       const btn = document.querySelector(`[data-trow="${cssEscape(key)}"]`);
       btn?.classList.toggle('qb-on', e.form[key]);
@@ -1105,6 +1112,20 @@
     return el.value;
   }
 
+  // Form-level inputs (escrow waived, monthly taxes/insurance, prepaid days,
+  // loan purpose) all feed calcPrepaids but live outside the option, so the
+  // option-level recompute in updateOptionField never sees them. Editing any
+  // of them must refresh every non-overridden option's stored prepaids — else
+  // the cards keep showing a stale escrow / insurance / tax figure.
+  function recalcPrepaidsAll() {
+    const e = state.editing;
+    if (!e) return;
+    e.options.forEach((opt) => {
+      if (!opt.prepaidsOverride) opt.prepaidsAndEscrow = calcPrepaids(e.form, opt);
+      if (!opt.totalClosingCostsOverride) opt.totalClosingCosts = sumClosingCosts(opt);
+    });
+  }
+
   function updateField(key, value) {
     const e = state.editing;
     if (!e) return;
@@ -1143,6 +1164,14 @@
 
     // Standard intake fields.
     e.form[key] = value;
+
+    // These inputs feed calcPrepaids — refresh every option's stored prepaids
+    // so the cards never show a stale escrow / insurance / tax / interest-days
+    // figure (loanPurpose also gates the 12-month hazard term on purchases).
+    if (key === 'monthlyTaxes' || key === 'monthlyInsurance' ||
+        key === 'prepaidInterestDays' || key === 'loanPurpose') {
+      recalcPrepaidsAll();
+    }
 
     // loanPurpose changes the layout (purchase blocks, labels, seller credit)
     if (key === 'loanPurpose') { render(); return; }
