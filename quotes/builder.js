@@ -110,7 +110,6 @@
       // Quick Fill / Global Assumptions — drive "Populate Options".
       globalLoanAmount: '',
       globalLoanTerm: 360,
-      hazardAnnualPremium: '',
       prepaidInterestDays: 15,
       defaultLenderFees: '',
       defaultThirdPartyFees: '',
@@ -180,14 +179,18 @@
     return (loanAmount * annualRatePct) / 100 / 365;
   }
 
-  // Prepaids = daily interest × prepaid days (+ 12 mo hazard on purchases)
-  // (+ 2 mo taxes + 2 mo insurance when escrowed) + option-level adjustment.
+  // Prepaids = daily interest × prepaid days
+  //   + 12 mo hazard insurance (12 × monthly insurance) on purchases
+  //   + 2 mo taxes + 2 mo insurance when escrowed
+  //   + option-level adjustment.
+  // So a purchase with escrow waived = 12 mo hazard + prepaid interest only.
   function calcPrepaids(form, opt) {
     const interest =
       calcDailyInterest(opt.loanAmount, opt.rate) * (Number(form.prepaidInterestDays) || 0);
-    const hazard12 = form.loanPurpose === 'purchase' ? (Number(form.hazardAnnualPremium) || 0) : 0;
+    const monthlyInsurance = Number(form.monthlyInsurance) || 0;
+    const hazard12 = form.loanPurpose === 'purchase' ? 12 * monthlyInsurance : 0;
     const escrowCushion = !form.escrowWaived
-      ? 2 * (Number(form.monthlyTaxes) || 0) + 2 * (Number(form.monthlyInsurance) || 0)
+      ? 2 * (Number(form.monthlyTaxes) || 0) + 2 * monthlyInsurance
       : 0;
     return interest + hazard12 + escrowCushion + (Number(opt.prepaidAdjustment ?? 0) || 0);
   }
@@ -684,8 +687,7 @@
               })}
               ${field('Loan term (months)', 'number', 'globalLoanTerm', f.globalLoanTerm, '360')}
               ${fieldMoney('Property taxes (monthly)', 'monthlyTaxes', f.monthlyTaxes, '270')}
-              ${fieldMoney('Hazard insurance (monthly)', 'monthlyInsurance', f.monthlyInsurance, '120')}
-              ${fieldMoney('Hazard insurance (annual premium)', 'hazardAnnualPremium', f.hazardAnnualPremium, '1,440', { hint: 'Prepaids on purchases' })}
+              ${fieldMoney('Hazard insurance (monthly)', 'monthlyInsurance', f.monthlyInsurance, '120', { hint: 'Prepaids use 12× this on purchases' })}
               ${field('Prepaid interest (days)', 'number', 'prepaidInterestDays', f.prepaidInterestDays, '15', { hint: 'Closing to month end' })}
               ${field('Closing date', 'date', 'targetCloseDate', f.targetCloseDate, '')}
               ${fieldPct('Default points %', 'defaultPoints', f.defaultPoints, '0.000')}
@@ -1351,7 +1353,6 @@
         targetCloseDate: f.targetCloseDate,
         globalLoanAmount: f.globalLoanAmount,
         globalLoanTerm: f.globalLoanTerm,
-        hazardAnnualPremium: f.hazardAnnualPremium,
         prepaidInterestDays: f.prepaidInterestDays,
         defaultLenderFees: f.defaultLenderFees,
         defaultThirdPartyFees: f.defaultThirdPartyFees,
