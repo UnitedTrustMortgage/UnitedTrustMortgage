@@ -237,25 +237,8 @@
     const hasTI = ctx.monthlyTaxes != null || ctx.monthlyInsurance != null;
     const showTotal = ctx.escrowed && hasTI;
 
-    // Purchase-only: resolve which price drives THIS card (per-option
-    // override wins) — mirrors LoanComparison's OptionCard so the price and
-    // down payment are visible without expanding the breakdown.
     const isPurchase = ctx.loanPurpose === 'purchase';
-    const effectivePurchasePrice =
-      isPurchase && opt.purchasePriceOverride != null && opt.purchasePriceOverride > 0
-        ? opt.purchasePriceOverride
-        : isPurchase
-        ? ctx.purchasePrice
-        : null;
-    const priceIsOverridden =
-      isPurchase &&
-      opt.purchasePriceOverride != null &&
-      opt.purchasePriceOverride > 0 &&
-      opt.purchasePriceOverride !== ctx.purchasePrice;
-    const downPayment =
-      isPurchase && effectivePurchasePrice != null && effectivePurchasePrice > 0
-        ? Math.max(0, effectivePurchasePrice - (opt.loanAmount ?? 0))
-        : null;
+    const { effectivePurchasePrice, priceIsOverridden, downPayment } = purchaseFacts(opt, ctx);
     const downPaymentPct =
       downPayment != null && effectivePurchasePrice
         ? (downPayment / effectivePurchasePrice) * 100
@@ -409,16 +392,7 @@
     const prepaidsAndEscrow = opt.prepaidsAndEscrow ?? 0;
     const pointsCost = opt.pointsCost ?? 0;
 
-    // Per-card purchase-price override falls back to the quote-level price.
-    const effectivePurchasePrice =
-      isPurchase && opt.purchasePriceOverride != null && opt.purchasePriceOverride > 0
-        ? opt.purchasePriceOverride
-        : ctx.purchasePrice;
-    const priceIsOverridden =
-      isPurchase &&
-      opt.purchasePriceOverride != null &&
-      opt.purchasePriceOverride > 0 &&
-      opt.purchasePriceOverride !== ctx.purchasePrice;
+    const { effectivePurchasePrice, priceIsOverridden, downPayment } = purchaseFacts(opt, ctx);
 
     const pivot = isPurchase
       ? effectivePurchasePrice ?? opt.loanAmount
@@ -450,11 +424,6 @@
         : totalClosingCosts > 0
         ? `− ${fmtMoney(totalClosingCosts, true)}`
         : `+ ${fmtMoney(-totalClosingCosts, true)}`;
-
-    const downPayment =
-      isPurchase && effectivePurchasePrice != null && effectivePurchasePrice > 0
-        ? Math.max(0, effectivePurchasePrice - (opt.loanAmount ?? 0))
-        : null;
 
     return `
       <div class="q-breakdown ${expanded ? 'q-open' : ''}">
@@ -493,6 +462,29 @@
         ${bdRow(cashLabel, cashValue, { total: true })}
       </div>
     `;
+  }
+
+  // Purchase-only facts for one card: which price drives it (per-option
+  // override wins, falling back to the quote-level price) and the resulting
+  // down payment. Everything is null on non-purchase quotes. Shared by the
+  // card stats and the breakdown so they can never disagree.
+  function purchaseFacts(opt, ctx) {
+    const isPurchase = ctx.loanPurpose === 'purchase';
+    const hasOverride =
+      isPurchase && opt.purchasePriceOverride != null && opt.purchasePriceOverride > 0;
+    const effectivePurchasePrice = !isPurchase
+      ? null
+      : hasOverride
+      ? opt.purchasePriceOverride
+      : ctx.purchasePrice;
+    return {
+      effectivePurchasePrice,
+      priceIsOverridden: hasOverride && opt.purchasePriceOverride !== ctx.purchasePrice,
+      downPayment:
+        effectivePurchasePrice != null && effectivePurchasePrice > 0
+          ? Math.max(0, effectivePurchasePrice - (opt.loanAmount ?? 0))
+          : null,
+    };
   }
 
   function bdRow(label, value, opts = {}) {

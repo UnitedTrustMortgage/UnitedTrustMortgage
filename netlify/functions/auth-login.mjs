@@ -15,6 +15,7 @@ import {
   err,
   parseBody,
   newSessionToken,
+  sessionCookie,
   ipFrom,
   userAgentFrom,
 } from "./_lib.mjs";
@@ -83,6 +84,6 @@ export const handler = async (event) => {
     // Also set a cookie so the operator stays signed in without JS having
     // to manage the token across pages. SameSite=Lax is fine — the API and
     // the operator UI live on the same Netlify deploy.
-    "Set-Cookie": `utm_quote_session=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_DAYS * 24 * 60 * 60}`,
+    "Set-Cookie": sessionCookie(token, SESSION_DAYS * 24 * 60 * 60),
   });
 };

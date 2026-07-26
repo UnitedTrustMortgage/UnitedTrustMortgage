@@ -66,9 +66,17 @@ export function newSessionToken() {
   return crypto.randomBytes(32).toString("base64url");
 }
 
+export const SESSION_COOKIE = "utm_quote_session";
+
+// Build the Set-Cookie header for the operator session. Pass maxAgeSeconds
+// 0 (and an empty token) to clear it on logout.
+export function sessionCookie(token, maxAgeSeconds) {
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSeconds}`;
+}
+
 // Pull the operator session out of the request. Looks at the Authorization
-// header ("Bearer <token>") first; falls back to a cookie called
-// "utm_quote_session" so the operator can stay logged in across reloads.
+// header ("Bearer <token>") first; falls back to the session cookie so the
+// operator can stay logged in across reloads.
 //
 // Returns { operator, session } on success, throws otherwise. The thrown
 // error has a `status` property so handlers can convert it to a clean
@@ -128,7 +136,7 @@ export async function requireOperator(event) {
   return { operator, session };
 }
 
-function extractToken(event) {
+export function extractToken(event) {
   const auth = event.headers?.authorization || event.headers?.Authorization;
   if (auth && /^bearer\s+/i.test(auth)) {
     return auth.replace(/^bearer\s+/i, "").trim();
@@ -136,7 +144,7 @@ function extractToken(event) {
   // Cookie fallback — Netlify lowercases header names but check both for safety.
   const cookie = event.headers?.cookie || event.headers?.Cookie;
   if (cookie) {
-    const m = cookie.match(/(?:^|;\s*)utm_quote_session=([^;]+)/);
+    const m = cookie.match(new RegExp(`(?:^|;\\s*)${SESSION_COOKIE}=([^;]+)`));
     if (m) return decodeURIComponent(m[1]);
   }
   return null;

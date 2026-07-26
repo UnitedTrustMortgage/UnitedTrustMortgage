@@ -3,7 +3,7 @@
    Vanilla-JS port of cadence-crm's QuoteEditorPage.tsx (the source of
    truth for editor behavior: loan math, Quick Fill globals, Populate
    Options, per-option override toggles, duplicate, action bar) plus a
-   dashboard and pass-code auth in front.
+   dashboard and email + password auth in front.
 
    Flow:
    1. Boot → check /api/auth/me. If 401, show login. Else show app.
@@ -204,6 +204,22 @@
       (Number(opt.taxesAndGov ?? 0) || 0) +
       (Number(opt.prepaidsAndEscrow ?? 0) || 0)
     );
+  }
+
+  // Recompute every derived value on an option from its inputs + the form.
+  // Fields the operator flipped to Override are left alone. Idempotent, so
+  // callers can run it after any change without tracking what was touched.
+  function recalcOption(form, opt) {
+    if (!opt.monthlyPaymentOverride) {
+      opt.monthlyPayment = calcMonthlyPayment(opt.loanAmount, opt.rate, opt.termMonths);
+    }
+    opt.pointsCost = calcPointsCost(opt.loanAmount, opt.points);
+    if (!opt.prepaidsOverride) {
+      opt.prepaidsAndEscrow = calcPrepaids(form, opt);
+    }
+    if (!opt.totalClosingCostsOverride) {
+      opt.totalClosingCosts = sumClosingCosts(opt);
+    }
   }
 
   // ── State ──────────────────────────────────────────────────────────
@@ -461,7 +477,7 @@
     // Stored prepaids/totals can predate later edits to escrow, taxes,
     // insurance, or the hazard formula itself — recompute non-overridden
     // options so the editor opens with values that match the current inputs.
-    recalcPrepaidsAll();
+    recalcAllOptions();
     state.view = 'editor';
     render();
   }
@@ -499,6 +515,13 @@
     const loan  = Number(form.loanBalance) || 0;
     if (!price || !loan) return null;
     return Math.max(0, price - loan);
+  }
+
+  // Down payment as a % of purchase price for the dual dp inputs ('' when
+  // it can't be computed — both the editor HTML and the live sync use this).
+  function calcDownPaymentPct(form, dp) {
+    if (dp == null || !(Number(form.estValue) > 0)) return '';
+    return Number(((dp / Number(form.estValue)) * 100).toFixed(2));
   }
 
   // Cash to close = down payment + total closing costs from the first
@@ -606,7 +629,7 @@
             <div class="qb-ltv">
               <div class="qb-ltv-head">
                 <span>Loan-to-value</span>
-                <strong class="qb-mono" data-dv="ltv-num">${ltv ? ltv.toFixed(1) + '%' : '—'}</strong>
+                <strong class="qb-mono" data-dv="ltv-num">${fmtLtv(ltv)}</strong>
               </div>
               <div class="qb-ltv-bar">
                 <div class="qb-ltv-fill ${ltvClass(ltv)}" data-dv="ltv-fill" style="width:${Math.min(ltv, 100)}%"></div>
@@ -632,11 +655,7 @@
                 <div class="qb-ltv-head"><span>Down payment</span></div>
                 <div class="qb-fields" style="margin-top:4px">
                   ${fieldMoney('Amount', '__dpAmount', downPayment ?? '', '65,000')}
-                  ${fieldPct('Percent of price', '__dpPct',
-                    (downPayment != null && Number(f.estValue) > 0)
-                      ? Number(((downPayment / Number(f.estValue)) * 100).toFixed(2))
-                      : '',
-                    '20')}
+                  ${fieldPct('Percent of price', '__dpPct', calcDownPaymentPct(f, downPayment), '20')}
                 </div>
                 <div class="qb-ltv-foot" style="justify-content:flex-start;margin-top:8px">
                   <span>${Number(f.estValue) > 0 ? 'Editing either field auto-updates the loan amount' : 'Enter purchase price first'}</span>
@@ -780,18 +799,18 @@
 
           <div class="qb-rail-row"><span class="lbl">${isPurchase ? 'Loan amount' : 'Loan balance'}</span><span class="val" data-dv="rr-loan">${fmtMoneyOrDash(f.loanBalance)}</span></div>
           <div class="qb-rail-row"><span class="lbl">${isPurchase ? 'Purchase price' : 'Estimated value'}</span><span class="val" data-dv="rr-value">${fmtMoneyOrDash(f.estValue)}</span></div>
-          <div class="qb-rail-row"><span class="lbl">LTV</span><span class="val" data-dv="rr-ltv" style="color:${ltvRailColor(ltv)}">${ltv ? ltv.toFixed(1) + '%' : '—'}</span></div>
+          <div class="qb-rail-row"><span class="lbl">LTV</span><span class="val" data-dv="rr-ltv" style="color:${ltvRailColor(ltv)}">${fmtLtv(ltv)}</span></div>
 
           <div class="qb-rail-divider"></div>
 
           ${
             isPurchase
               ? `
-            <div class="qb-rail-row qb-rail-big"><span class="lbl">Est. cash to close</span><span class="val" data-dv="rr-cash">${calcCashToClose(f, e.options) != null ? fmtMoneyOrDash(calcCashToClose(f, e.options)) : '—'}</span></div>
+            <div class="qb-rail-row qb-rail-big"><span class="lbl">Est. cash to close</span><span class="val" data-dv="rr-cash">${fmtMoneyOrDash(calcCashToClose(f, e.options))}</span></div>
             <div class="qb-rail-row qb-rail-muted"><span class="lbl">Down payment + est. closing costs</span><span class="val" data-dv="rr-cash-sub" style="font-size:11px">${downPayment != null ? fmtMoneyOrDash(downPayment) + ' down' : 'Add price & loan amount'}</span></div>
           `
               : `
-            <div class="qb-rail-row qb-rail-big"><span class="lbl">Est. cash to borrower</span><span class="val" data-dv="rr-cash">${calcCashEst(f) != null ? fmtMoneyOrDash(calcCashEst(f)) : '—'}</span></div>
+            <div class="qb-rail-row qb-rail-big"><span class="lbl">Est. cash to borrower</span><span class="val" data-dv="rr-cash">${fmtMoneyOrDash(calcCashEst(f))}</span></div>
             <div class="qb-rail-row qb-rail-muted"><span class="lbl">Net of est. fees & prepaids</span><span class="val" style="font-size:11px">~$10,160 deducted</span></div>
           `
           }
@@ -829,7 +848,7 @@
           <div class="qb-ab-divider"></div>
           <div class="qb-ab-block">
             <div class="qb-ab-label">LTV</div>
-            <div class="qb-ab-val" data-dv="ab-ltv">${ltv ? ltv.toFixed(1) + '%' : '—'}</div>
+            <div class="qb-ab-val" data-dv="ab-ltv">${fmtLtv(ltv)}</div>
           </div>
           <div class="qb-ab-divider"></div>
           <div class="qb-ab-block">
@@ -863,6 +882,7 @@
     return v === 'cashout' ? 'cash-out' : v === 'rateterm' ? 'rate/term' : 'purchase';
   }
   function ltvClass(ltv) { return ltv > 80 ? 'qb-bad' : ltv > 70 ? 'qb-warn' : ''; }
+  function fmtLtv(ltv) { return ltv ? ltv.toFixed(1) + '%' : '—'; }
   function ltvRailColor(ltv) {
     return ltv > 80 ? '#b13e1c' : ltv > 70 ? '#8a6d2f' : 'var(--ink)';
   }
@@ -1008,16 +1028,10 @@
     });
     // Action bar + rail
     $$('[data-act="save"]').forEach((b) => b.addEventListener('click', save));
-    $('[data-act="copy-share"]')?.addEventListener('click', () => {
-      const input = $('#qb-share-input');
-      input?.select();
-      navigator.clipboard?.writeText(input.value).then(
-        () => toast('ok', 'Share link copied'),
-        () => toast('err', "Couldn't copy"),
-      );
-    });
-    $('[data-act="copy-share-2"]')?.addEventListener('click', () => {
-      if (e.quote?.public_token) copyShareLink(e.quote.public_token);
+    $$('[data-act="copy-share"], [data-act="copy-share-2"]').forEach((b) => {
+      b.addEventListener('click', () => {
+        if (e.quote?.public_token) copyShareLink(e.quote.public_token);
+      });
     });
     $('[data-act="open-client"]')?.addEventListener('click', () => {
       if (e.quote?.public_token) window.open(shareUrl(e.quote.public_token), '_blank', 'noopener');
@@ -1042,13 +1056,9 @@
 
   function toggleTRow(key) {
     const e = state.editing;
-    if (key === '__escrowed') {
-      // Quick Fill's "Escrowed" is the inverse of escrowWaived.
-      e.form.escrowWaived = !e.form.escrowWaived;
-      recalcPrepaidsAll();
-      render();
-      return;
-    }
+    // Quick Fill's "Escrowed" switch is the inverse view of escrowWaived —
+    // both flip the same flag and fall through to the same handling below.
+    if (key === '__escrowed') key = 'escrowWaived';
     const optMatch = key.match(/^__opt\.(\d+)\.(.+)$/);
     if (optMatch) {
       const i = Number(optMatch[1]);
@@ -1064,7 +1074,7 @@
     e.form[key] = !e.form[key];
     // escrowWaived feeds calcPrepaids → recompute before re-render so the
     // option cards reflect the new escrow state (QF formula + escrowed mirror).
-    if (key === 'escrowWaived') { recalcPrepaidsAll(); render(); return; }
+    if (key === 'escrowWaived') { recalcAllOptions(); render(); return; }
     if (key === 'allowPPP') {
       const btn = document.querySelector(`[data-trow="${cssEscape(key)}"]`);
       btn?.classList.toggle('qb-on', e.form[key]);
@@ -1082,15 +1092,7 @@
     if (!opt) return;
     const turningOn = !opt[flagKey];
     opt[flagKey] = turningOn;
-    if (!turningOn) {
-      if (flagKey === 'monthlyPaymentOverride') {
-        opt.monthlyPayment = calcMonthlyPayment(opt.loanAmount, opt.rate, opt.termMonths);
-      } else if (flagKey === 'prepaidsOverride') {
-        opt.prepaidsAndEscrow = calcPrepaids(e.form, opt);
-      } else if (flagKey === 'totalClosingCostsOverride') {
-        opt.totalClosingCosts = sumClosingCosts(opt);
-      }
-    }
+    if (!turningOn) recalcOption(e.form, opt);
     render();
   }
 
@@ -1117,15 +1119,12 @@
   // Form-level inputs (escrow waived, monthly taxes/insurance, prepaid days,
   // loan purpose) all feed calcPrepaids but live outside the option, so the
   // option-level recompute in updateOptionField never sees them. Editing any
-  // of them must refresh every non-overridden option's stored prepaids — else
+  // of them must refresh every non-overridden option's stored values — else
   // the cards keep showing a stale escrow / insurance / tax figure.
-  function recalcPrepaidsAll() {
+  function recalcAllOptions() {
     const e = state.editing;
     if (!e) return;
-    e.options.forEach((opt) => {
-      if (!opt.prepaidsOverride) opt.prepaidsAndEscrow = calcPrepaids(e.form, opt);
-      if (!opt.totalClosingCostsOverride) opt.totalClosingCosts = sumClosingCosts(opt);
-    });
+    e.options.forEach((opt) => recalcOption(e.form, opt));
   }
 
   function updateField(key, value) {
@@ -1172,7 +1171,7 @@
     // figure (loanPurpose also gates the 12-month hazard term on purchases).
     if (key === 'monthlyTaxes' || key === 'monthlyInsurance' ||
         key === 'prepaidInterestDays' || key === 'loanPurpose') {
-      recalcPrepaidsAll();
+      recalcAllOptions();
     }
 
     // loanPurpose changes the layout (purchase blocks, labels, seller credit)
@@ -1189,46 +1188,23 @@
     const opt = e.options[i];
     if (!opt) return;
 
-    // Normalize per the source's onChange handlers.
-    const NULLABLE_MONEY = [
+    // Normalize per the source's onChange handlers. Everything numeric that
+    // isn't in ZEROED is nullable: '' clears the field to null.
+    const ZEROED = ['loanAmount', 'monthlyPayment', 'termMonths', 'rate'];
+    const NULLABLE = [
+      'apr','points','prepaidsAndEscrow','totalClosingCosts',
       'cashOut','originationFee','lenderFees','thirdPartyFees','taxesAndGov',
       'prepaidAdjustment','lenderCredit','sellerCredit','purchasePriceOverride',
     ];
-    if (fkey === 'loanAmount' || fkey === 'monthlyPayment' || fkey === 'termMonths') {
+    if (ZEROED.includes(fkey)) {
       opt[fkey] = Number(value) || 0;
-    } else if (fkey === 'rate') {
-      opt.rate = value == null ? 0 : Number(value) || 0;
-    } else if (fkey === 'apr') {
-      opt.apr = value === '' || value == null ? null : Number(value);
-    } else if (fkey === 'points') {
-      opt.points = value === '' || value == null ? null : Number(value);
-    } else if (fkey === 'prepaidsAndEscrow' || fkey === 'totalClosingCosts') {
-      opt[fkey] = value === '' || value == null ? null : Number(value);
-    } else if (NULLABLE_MONEY.includes(fkey)) {
+    } else if (NULLABLE.includes(fkey)) {
       opt[fkey] = value === '' || value == null ? null : Number(value);
     } else {
       opt[fkey] = value;
     }
 
-    // ── Dependent recomputes (direct port of updateOption) ──
-    const piTouched = fkey === 'loanAmount' || fkey === 'rate' || fkey === 'termMonths';
-    if (piTouched && !opt.monthlyPaymentOverride) {
-      opt.monthlyPayment = calcMonthlyPayment(opt.loanAmount, opt.rate, opt.termMonths);
-    }
-    const pointsTouched = fkey === 'loanAmount' || fkey === 'points';
-    if (pointsTouched) {
-      opt.pointsCost = calcPointsCost(opt.loanAmount, opt.points);
-    }
-    const prepaidTouched = fkey === 'loanAmount' || fkey === 'rate' || fkey === 'prepaidAdjustment';
-    if (prepaidTouched && !opt.prepaidsOverride) {
-      opt.prepaidsAndEscrow = calcPrepaids(e.form, opt);
-    }
-    const PART_KEYS = ['pointsCost','originationFee','lenderFees','thirdPartyFees','taxesAndGov','prepaidsAndEscrow'];
-    const touchedAPart = PART_KEYS.includes(fkey) || pointsTouched || prepaidTouched;
-    if (touchedAPart && !opt.totalClosingCostsOverride) {
-      opt.totalClosingCosts = sumClosingCosts(opt);
-    }
-
+    recalcOption(e.form, opt);
     refreshDerived();
   }
 
@@ -1260,16 +1236,7 @@
       if ((m.thirdPartyFees == null || m.thirdPartyFees === 0) && f.defaultThirdPartyFees !== '') m.thirdPartyFees = Number(f.defaultThirdPartyFees);
       if ((m.taxesAndGov == null || m.taxesAndGov === 0) && f.defaultTaxesAndGov !== '') m.taxesAndGov = Number(f.defaultTaxesAndGov);
 
-      if (!m.monthlyPaymentOverride) {
-        m.monthlyPayment = calcMonthlyPayment(m.loanAmount, m.rate, m.termMonths);
-      }
-      m.pointsCost = calcPointsCost(m.loanAmount, m.points);
-      if (!m.prepaidsOverride) {
-        m.prepaidsAndEscrow = calcPrepaids(f, m);
-      }
-      if (!m.totalClosingCostsOverride) {
-        m.totalClosingCosts = sumClosingCosts(m);
-      }
+      recalcOption(f, m);
       return m;
     });
   }
@@ -1294,9 +1261,7 @@
     }
     const pctEl = document.querySelector('[data-field="__dpPct"]');
     if (pctEl && pctEl !== document.activeElement) {
-      pctEl.value = (dp != null && Number(e.form.estValue) > 0)
-        ? String(Number(((dp / Number(e.form.estValue)) * 100).toFixed(2)))
-        : '';
+      pctEl.value = String(calcDownPaymentPct(e.form, dp));
     }
   }
 
@@ -1307,7 +1272,7 @@
     const ltv = calcLtv(f);
     const rr = calcRateRange(f);
 
-    setDv('ltv-num', ltv ? ltv.toFixed(1) + '%' : '—');
+    setDv('ltv-num', fmtLtv(ltv));
     const fill = document.querySelector('[data-dv="ltv-fill"]');
     if (fill) {
       fill.style.width = `${Math.min(ltv, 100)}%`;
@@ -1321,21 +1286,19 @@
     setDv('rr-value', fmtMoneyOrDash(f.estValue));
     const railLtv = document.querySelector('[data-dv="rr-ltv"]');
     if (railLtv) {
-      railLtv.textContent = ltv ? ltv.toFixed(1) + '%' : '—';
+      railLtv.textContent = fmtLtv(ltv);
       railLtv.style.color = ltvRailColor(ltv);
     }
     if (f.loanPurpose === 'purchase') {
-      const ctc = calcCashToClose(f, e.options);
-      setDv('rr-cash', ctc != null ? fmtMoneyOrDash(ctc) : '—');
+      setDv('rr-cash', fmtMoneyOrDash(calcCashToClose(f, e.options)));
       const dp = calcDownPayment(f);
       setDv('rr-cash-sub', dp != null ? fmtMoneyOrDash(dp) + ' down' : 'Add price & loan amount');
     } else {
-      const cash = calcCashEst(f);
-      setDv('rr-cash', cash != null ? fmtMoneyOrDash(cash) : '—');
+      setDv('rr-cash', fmtMoneyOrDash(calcCashEst(f)));
     }
     setDv('checks', checksHtml(f));
     setDv('ab-complete', `${calcCompleteness(f)}%`);
-    setDv('ab-ltv', ltv ? ltv.toFixed(1) + '%' : '—');
+    setDv('ab-ltv', fmtLtv(ltv));
     setDv('ab-borrower', escapeHtml(f.borrowerName || 'Unnamed'));
     setDv('qf-formula', qfFormulaHtml(f));
 
