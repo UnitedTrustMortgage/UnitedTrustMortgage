@@ -1,7 +1,7 @@
 # Quote Builder — UTM SITE
 
 Vanilla JS port of the cadence-crm quote builder, embedded in the UTM
-Netlify site. Operators sign in with a pass code at
+Netlify site. Operators sign in with email + password at
 `https://www.myunitedtrust.com/quotes/` and build comparison quotes;
 borrowers see the comparison at `https://quotes.myunitedtrust.com/<token>`
 and pick an option.
@@ -20,7 +20,7 @@ quotes/
 
 netlify/functions/
 ├── _lib.mjs          # Supabase client + session helpers (shared)
-├── auth-login.mjs    # POST /api/auth/login — verify pass code, issue session
+├── auth-login.mjs    # POST /api/auth/login — verify email + password, issue session
 ├── auth-me.mjs       # GET  /api/auth/me — return current operator
 ├── auth-logout.mjs   # POST /api/auth/logout — delete session
 ├── quotes.mjs        # /api/quotes/* — operator CRUD (list/create/get/revise/send)
@@ -89,24 +89,35 @@ In your DNS registrar:
 The `netlify.toml` rewrites handle the rest — any path under
 `quotes.myunitedtrust.com` lands on the right asset.
 
-## Managing operators (pass codes)
+## Managing operators (logins)
 
-Operators live in the `quote_operators` Supabase table. To add a new one:
+Operators live in the `quote_operators` Supabase table. Login is
+email + password (`verify_operator_login` checks the bcrypt hash in
+Postgres; email is matched case-insensitively and must be unique).
+To add a new operator:
 
 ```sql
--- Run in Supabase SQL Editor. Replace name + pass code.
+-- Run in Supabase SQL Editor. Replace name, email, and password.
 insert into public.quote_operators (name, email, pass_code_hash, active, is_admin)
 values (
   'Jane Doe',
   'jane@myunitedtrust.com',
-  crypt('SOME-LONG-RANDOM-CODE', gen_salt('bf')),
+  crypt('THEIR-PASSWORD', gen_salt('bf')),
   true,
   false  -- set true to let them see everyone's quotes
 );
 ```
 
-Then text/email the pass code to them. They enter it at
+Then text/email the password to them. They sign in at
 `https://www.myunitedtrust.com/quotes/`.
+
+### Reset a password
+
+```sql
+update public.quote_operators
+   set pass_code_hash = crypt('NEW-PASSWORD', gen_salt('bf'))
+ where email = 'jane@myunitedtrust.com';
+```
 
 ### Revoke access
 
@@ -149,14 +160,10 @@ npm run dev    # uses netlify dev — needs Netlify CLI installed globally
 your linked Netlify env. Without env vars set, the Functions will return
 clear "X env var required" errors.
 
-## Initial operator
+## Current operators
 
-The first operator (Arin) was seeded by the migration. The pass code was
-shared once via chat — store it in 1Password (or wherever) and don't
-commit it. To rotate:
+- `arin@myunitedtrust.com` — admin (sees all quotes)
+- `michael@myunitedtrust.com` — standard (sees only their own quotes)
 
-```sql
-update public.quote_operators
-   set pass_code_hash = crypt('NEW-PASS-CODE', gen_salt('bf'))
- where name = 'Arin';
-```
+Passwords are stored only as bcrypt hashes in `quote_operators` — never
+commit a plaintext password to this repo.

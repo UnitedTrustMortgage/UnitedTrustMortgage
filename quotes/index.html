@@ -20,11 +20,22 @@
         <img src="/assets/utm-blue.png" alt="United Trust Mortgage" class="qb-login-logo">
         <div class="qb-brand-sub text-mono">QUOTE BUILDER</div>
       </div>
-      <h1 class="qb-login-title">Enter your password</h1>
+      <h1 class="qb-login-title">Sign in</h1>
       <p class="qb-login-sub">
         Employee access only. Your usage is logged.
       </p>
       <form id="qb-login-form" class="qb-login-form" autocomplete="off">
+        <input
+          type="email"
+          id="qb-email-input"
+          class="qb-input qb-pass-input"
+          placeholder="Email"
+          required
+          autofocus
+          autocomplete="username"
+          autocapitalize="off"
+          spellcheck="false"
+        >
         <input
           type="password"
           id="qb-pass-input"
@@ -32,7 +43,7 @@
           placeholder="Password"
           required
           minlength="4"
-          autocomplete="off"
+          autocomplete="current-password"
           autocapitalize="off"
           spellcheck="false"
         >

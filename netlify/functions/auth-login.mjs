@@ -1,8 +1,9 @@
 // POST /api/auth/login
 //
-// Body: { passCode: string }
-// Looks up the (active) operator whose bcrypt-hashed pass code matches and
-// issues a 30-day session token. Returns the token + operator profile.
+// Body: { email: string, password: string }
+// Looks up the active operator by email, verifies the bcrypt-hashed
+// password, and issues a 30-day session token. Returns the token +
+// operator profile.
 //
 // We do the bcrypt verify inside Postgres (pgcrypto's `crypt`) so the
 // Function doesn't need a bcrypt JS dependency, and the comparison runs
@@ -25,33 +26,30 @@ export const handler = async (event) => {
 
   const body = parseBody(event);
   if (body === null) return err(400, "invalid JSON body");
-  const passCode = (body.passCode || "").trim();
-  if (!passCode || passCode.length < 4) return err(400, "pass code required");
+  const email = (body.email || "").trim();
+  const password = (body.password || body.passCode || "").trim();
+  if (!email || !email.includes("@")) return err(400, "email required");
+  if (!password || password.length < 4) return err(400, "password required");
 
   const supabase = getSupabase();
 
-  // Find the active operator whose hashed pass code matches. We use a
-  // single SQL RPC-style query via .rpc so the bcrypt compare happens in
-  // Postgres. If no `verify_operator_passcode` function exists yet, fall
-  // back to a SELECT that uses crypt() inline.
-  //
-  // The RPC returns 0 or 1 row. We use .maybeSingle() so a no-match (invalid
-  // pass code) gives us `data: null` instead of an error.
+  // The RPC returns 0 or 1 rows; the bcrypt compare happens in Postgres
+  // against the single row matching the email.
   const { data: rows, error } = await supabase
-    .rpc("verify_operator_passcode", { p_code: passCode });
+    .rpc("verify_operator_login", { p_email: email, p_code: password });
 
   if (error) {
-    if (error.code === "PGRST202" || /function .*verify_operator_passcode/i.test(error.message)) {
+    if (error.code === "PGRST202" || /function .*verify_operator_login/i.test(error.message)) {
       return err(
         500,
-        "auth helper missing: run the verify_operator_passcode SQL migration",
+        "auth helper missing: run the verify_operator_login SQL migration",
       );
     }
     return err(500, `auth lookup failed: ${error.message}`);
   }
   // RPC returns an array of rows (the function returns SETOF).
   const operator = Array.isArray(rows) ? rows[0] : rows;
-  if (!operator || !operator.id) return err(401, "invalid pass code");
+  if (!operator || !operator.id) return err(401, "invalid email or password");
 
   // Mint a session.
   const token = newSessionToken();

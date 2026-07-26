@@ -58,14 +58,14 @@ export const handler = async (event) => {
     const rest = m[2] || "";
 
     if (rest === "") {
-      if (method === "GET") return getQuote(id);
+      if (method === "GET") return getQuote(id, operator);
       return err(405, "method not allowed");
     }
     if (rest === "/revisions" && method === "POST") {
-      return appendRevision(id, event);
+      return appendRevision(id, event, operator);
     }
     if (rest === "/send" && method === "POST") {
-      return markSent(id, event);
+      return markSent(id, event, operator);
     }
 
     return err(404, "not found");
@@ -193,7 +193,7 @@ async function createQuote(operator, event) {
   return json(200, { quote: updated, revision });
 }
 
-async function getQuote(id) {
+async function getQuote(id, operator) {
   const supabase = getSupabase();
   const { data: quote, error } = await supabase
     .from("loan_quotes")
@@ -202,6 +202,7 @@ async function getQuote(id) {
     .maybeSingle();
   if (error) return err(500, error.message);
   if (!quote) return err(404, "not found");
+  if (!canAccessQuote(operator, quote)) return err(404, "not found");
 
   let revision = null;
   if (quote.current_revision_id) {
@@ -217,11 +218,13 @@ async function getQuote(id) {
   return json(200, { quote, revision });
 }
 
-async function appendRevision(quoteId, event) {
+async function appendRevision(quoteId, event, operator) {
   const body = parseBody(event);
   if (body === null) return err(400, "invalid JSON body");
 
   const supabase = getSupabase();
+  const owned = await assertQuoteAccess(supabase, quoteId, operator);
+  if (owned !== true) return owned;
   const { data: latest } = await supabase
     .from("loan_quote_revisions")
     .select("revision_number")
@@ -261,13 +264,15 @@ async function appendRevision(quoteId, event) {
   return json(200, { quote: updated, revision });
 }
 
-async function markSent(quoteId, event) {
+async function markSent(quoteId, event, operator) {
   const body = parseBody(event);
   if (body === null) return err(400, "invalid JSON body");
   const channel = String(body.channel || "link").toLowerCase();
   const toAddress = String(body.to || "").trim() || "(direct link)";
 
   const supabase = getSupabase();
+  const owned = await assertQuoteAccess(supabase, quoteId, operator);
+  if (owned !== true) return owned;
   const { error: sErr } = await supabase.from("loan_quote_sends").insert({
     quote_id: quoteId,
     channel,
@@ -286,6 +291,23 @@ async function markSent(quoteId, event) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
+
+// Admins can touch any UTM quote; everyone else only their own. We return
+// 404 (not 403) so quote IDs aren't confirmable by other operators.
+function canAccessQuote(operator, quote) {
+  return operator.is_admin || quote.operator_id === operator.id;
+}
+
+async function assertQuoteAccess(supabase, quoteId, operator) {
+  const { data: quote, error } = await supabase
+    .from("loan_quotes")
+    .select("id, operator_id")
+    .eq("id", quoteId)
+    .maybeSingle();
+  if (error) return err(500, error.message);
+  if (!quote || !canAccessQuote(operator, quote)) return err(404, "not found");
+  return true;
+}
 
 async function insertRevision(quoteId, number, payload) {
   const supabase = getSupabase();

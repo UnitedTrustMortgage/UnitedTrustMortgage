@@ -243,19 +243,21 @@
   // ── Login ──────────────────────────────────────────────────────────
   function bindLogin() {
     const form = $('#qb-login-form');
-    const input = $('#qb-pass-input');
+    const emailInput = $('#qb-email-input');
+    const passInput = $('#qb-pass-input');
     const errBox = $('#qb-login-error');
     if (!form) return;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errBox.hidden = true;
-      const code = input.value.trim();
-      if (!code) return;
+      const email = emailInput.value.trim();
+      const password = passInput.value.trim();
+      if (!email || !password) return;
       try {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ passCode: code }),
+          body: JSON.stringify({ email, password }),
         });
         const j = await res.json().catch(() => ({}));
         if (!res.ok) {
