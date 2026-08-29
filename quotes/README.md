@@ -164,6 +164,7 @@ clear "X env var required" errors.
 
 - `arin@myunitedtrust.com` — admin (sees all quotes)
 - `michael@myunitedtrust.com` — standard (sees only their own quotes)
+- `kristen@myunitedtrust.com` — standard (sees only their own quotes)
 
 Passwords are stored only as bcrypt hashes in `quote_operators` — never
 commit a plaintext password to this repo.
