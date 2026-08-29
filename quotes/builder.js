@@ -666,32 +666,10 @@
             }
           </section>
 
-          <!-- 03 Loan structure -->
+          <!-- 03 Notes (intake-side) -->
           <section class="qb-section">
             <div class="qb-section-head">
-              <h2 class="qb-section-title"><span class="qb-section-num">03</span> Loan structure</h2>
-              <span class="qb-section-hint">What product to price</span>
-            </div>
-            <div class="qb-fields">
-              ${fieldChips('Loan purpose', 'loanPurpose', f.loanPurpose, PURPOSE_OPTIONS, { full: true })}
-              ${fieldSelect('Product', 'product', f.product, PRODUCT_OPTIONS)}
-              ${fieldSelect('Lock period', 'lockPeriod', f.lockPeriod, LOCK_OPTIONS, { numeric: true })}
-              ${fieldMoney('Desired cash-out at close', 'desiredCashOut', f.desiredCashOut, '50,000', { full: true, hint: 'Free-and-clear: leave balance blank — loan amount = this cash-out' })}
-              ${fieldMoney('Monthly property taxes', 'monthlyTaxes', f.monthlyTaxes, '270', { hint: 'Used for the T&I row' })}
-              ${fieldMoney('Monthly insurance', 'monthlyInsurance', f.monthlyInsurance, '120', { hint: 'Hazard / homeowners' })}
-            </div>
-            <div style="margin-top:18px;display:grid;gap:8px">
-              ${toggleRow('escrowWaived', f.escrowWaived, 'Waive escrow',
-                "Borrower pays taxes & insurance directly. Leave off to show a 'Total est. payment' row that adds T&I to the monthly P&I.")}
-              ${toggleRow('allowPPP', f.allowPPP, 'Allow prepayment penalty options',
-                'PPP options trade ~0.5% lower rate for a 3-year lock-in')}
-            </div>
-          </section>
-
-          <!-- 04 Notes (intake-side) -->
-          <section class="qb-section">
-            <div class="qb-section-head">
-              <h2 class="qb-section-title"><span class="qb-section-num">04</span> Notes <em class="qb-title-aside">optional</em></h2>
+              <h2 class="qb-section-title"><span class="qb-section-num">03</span> Notes <em class="qb-title-aside">optional</em></h2>
               <span class="qb-section-hint">Anything we should know</span>
             </div>
             <div class="qb-fields">
@@ -700,13 +678,17 @@
             </div>
           </section>
 
-          <!-- 05 Quick Fill / Global Assumptions -->
+          <!-- 04 Quick Fill / Global Assumptions -->
           <section class="qb-section">
             <div class="qb-section-head">
-              <h2 class="qb-section-title"><span class="qb-section-num">05</span> Quick Fill <em class="qb-title-aside">global assumptions</em></h2>
+              <h2 class="qb-section-title"><span class="qb-section-num">04</span> Quick Fill <em class="qb-title-aside">global assumptions</em></h2>
               <span class="qb-section-hint">Enter once, then click Populate Options</span>
             </div>
             <div class="qb-fields">
+              ${fieldChips('Loan purpose', 'loanPurpose', f.loanPurpose, PURPOSE_OPTIONS, { full: true })}
+              ${fieldSelect('Product', 'product', f.product, PRODUCT_OPTIONS)}
+              ${fieldSelect('Lock period', 'lockPeriod', f.lockPeriod, LOCK_OPTIONS, { numeric: true })}
+              ${fieldMoney('Desired cash-out at close', 'desiredCashOut', f.desiredCashOut, '50,000', { full: true, hint: 'Free-and-clear: leave balance blank — loan amount = this cash-out' })}
               ${fieldMoney('Loan amount', 'globalLoanAmount', f.globalLoanAmount, '500,000', {
                 hint: isPurchase ? 'Loan the borrower is taking out' : 'Desired new loan (gross)',
               })}
@@ -724,6 +706,10 @@
                 ${toggleRow('__escrowed', !f.escrowWaived, 'Escrowed (taxes & insurance)',
                   'Adds 2 months of taxes + 2 months of insurance to the prepaids cushion when on.')}
               </div>
+              <div class="qb-field qb-full">
+                ${toggleRow('allowPPP', f.allowPPP, 'Allow prepayment penalty options',
+                  'PPP options trade ~0.5% lower rate for a 3-year lock-in')}
+              </div>
             </div>
             <div class="qb-qf-foot">
               <p data-dv="qf-formula">${qfFormulaHtml(f)}</p>
@@ -731,10 +717,10 @@
             </div>
           </section>
 
-          <!-- 06 Quote options -->
+          <!-- 05 Quote options -->
           <section class="qb-section">
             <div class="qb-section-head">
-              <h2 class="qb-section-title"><span class="qb-section-num">06</span> Quote options</h2>
+              <h2 class="qb-section-title"><span class="qb-section-num">05</span> Quote options</h2>
               <span class="qb-section-hint">${e.options.length} option${e.options.length === 1 ? '' : 's'} — these show on the comparison page</span>
             </div>
             <div class="qb-opts">
@@ -743,10 +729,10 @@
             <button class="qb-btn qb-btn-ghost" data-act="add-option" style="margin-top:16px;width:100%">+ Add another option</button>
           </section>
 
-          <!-- 07 Comparison page meta -->
+          <!-- 06 Comparison page meta -->
           <section class="qb-section">
             <div class="qb-section-head">
-              <h2 class="qb-section-title"><span class="qb-section-num">07</span> Comparison page</h2>
+              <h2 class="qb-section-title"><span class="qb-section-num">06</span> Comparison page</h2>
               <span class="qb-section-hint">What the client sees</span>
             </div>
             <div class="qb-fields">
