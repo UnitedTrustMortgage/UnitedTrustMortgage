@@ -848,6 +848,7 @@
           </div>
         </div>
         <div class="qb-ab-actions">
+          <button class="qb-btn" data-act="clear-all">Clear all</button>
           ${
             e.quote?.public_token
               ? `
@@ -1011,6 +1012,17 @@
       populateOptions();
       render();
       toast('ok', 'Options populated from globals');
+    });
+    // Clear all — blank slate for the whole editor. Keeps e.quote so a
+    // subsequent save still revises the same quote (and its share link).
+    $('[data-act="clear-all"]')?.addEventListener('click', () => {
+      if (!window.confirm('Clear everything? All fields, options, and notes reset to blank. Nothing is saved until you click Save.')) return;
+      e.form = blankIntake();
+      e.options = [blankOption()];
+      e.title = '';
+      e.note = '';
+      render();
+      toast('ok', 'Cleared — nothing saved yet');
     });
     // Action bar + rail
     $$('[data-act="save"]').forEach((b) => b.addEventListener('click', save));
