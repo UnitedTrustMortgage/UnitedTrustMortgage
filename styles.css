@@ -5,6 +5,26 @@
 /* --- Reset & Base --- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* JetBrains Mono's default "0" has a center dot that reads as an "8" at
+   small sizes. These tiny (~2KB) fonts contain ONLY a patched "0" glyph
+   (dot removed, same advance width); unicode-range makes every other
+   character fall through to the Google-hosted JetBrains Mono below it
+   in --font-mono. */
+@font-face {
+  font-family: 'JetBrains Mono PlainZero';
+  src: url('/assets/fonts/jbm-zero-400.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0030;
+}
+@font-face {
+  font-family: 'JetBrains Mono PlainZero';
+  src: url('/assets/fonts/jbm-zero-500.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0030;
+}
+
 :root {
   /* — Editorial Private Bank palette · BONE direction — */
   --bone:          #f4f1e8;   /* page bg */
@@ -54,7 +74,7 @@
   /* — Type stack — */
   --font-main:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-display: 'Fraunces', 'Times New Roman', Georgia, serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono:    'JetBrains Mono PlainZero', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* — Motion — */
   --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
