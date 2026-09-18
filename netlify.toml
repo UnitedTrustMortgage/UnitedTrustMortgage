@@ -102,9 +102,22 @@
   to = "/market-data/index.html"
   status = 200
 
+[[redirects]]
+  from = "/intranet"
+  to = "/intranet/index.html"
+  status = 200
+
 # Quote-builder HTML must never be cached — operators/borrowers always get the
 # latest UI on reload.
 [[headers]]
   for = "/quotes/*.html"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Intranet: never cached (employees always get the latest content on reload)
+# and never indexed by search engines (belt-and-suspenders with the meta tag).
+[[headers]]
+  for = "/intranet/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    X-Robots-Tag = "noindex, nofollow"

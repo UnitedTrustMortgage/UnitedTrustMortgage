@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTM Intranet</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,1,300;9..144,1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/intranet/intranet.css">
+</head>
+<body class="in-page">
+
+  <!-- Login screen — shown until a valid session is detected. -->
+  <main id="in-login" class="in-login" hidden>
+    <div class="in-login-card">
+      <div class="in-login-brand">
+        <img src="/assets/utm-blue.png" alt="United Trust Mortgage" class="in-login-logo">
+        <div class="in-brand-sub text-mono">EMPLOYEE INTRANET</div>
+      </div>
+      <h1 class="in-login-title">Sign in</h1>
+      <p class="in-login-sub">
+        Employee access only. Your usage is logged.
+      </p>
+      <form id="in-login-form" class="in-login-form" autocomplete="off">
+        <input
+          type="email"
+          id="in-email-input"
+          class="in-input"
+          placeholder="Email"
+          required
+          autofocus
+          autocomplete="username"
+          autocapitalize="off"
+          spellcheck="false"
+        >
+        <input
+          type="password"
+          id="in-pass-input"
+          class="in-input"
+          placeholder="Password"
+          required
+          minlength="4"
+          autocomplete="current-password"
+          autocapitalize="off"
+          spellcheck="false"
+        >
+        <button type="submit" class="in-btn in-btn-primary in-btn-block">
+          Sign in
+        </button>
+        <div id="in-login-error" class="in-login-error" hidden></div>
+      </form>
+      <p class="in-login-help text-mono">
+        Forgot your password? Reach out to Arin to get it reset.
+      </p>
+    </div>
+  </main>
+
+  <!-- App shell — populated by intranet.js once authenticated. -->
+  <div id="in-app" class="in-app" hidden></div>
+
+  <script src="/intranet/data.js"></script>
+  <script src="/intranet/intranet.js"></script>
+</body>
+</html>
