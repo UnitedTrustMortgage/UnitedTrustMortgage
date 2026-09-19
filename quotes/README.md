@@ -164,6 +164,12 @@ clear "X env var required" errors.
 
 - `arin@myunitedtrust.com` — admin (sees all quotes)
 - `michael@myunitedtrust.com` — standard (sees only their own quotes)
+- `john@myunitedtrust.com` — standard (John Kim, added 2026-09-19)
+
+> Gotcha when creating hashes outside Postgres: pgcrypto's `crypt()`
+> only verifies `$2a$` bcrypt hashes — a `$2b$` hash (bcryptjs default)
+> silently fails to match. Prefer the SQL snippets above (`gen_salt('bf')`
+> emits `$2a$`), or relabel the prefix for ASCII passwords.
 
 Passwords are stored only as bcrypt hashes in `quote_operators` — never
 commit a plaintext password to this repo.
