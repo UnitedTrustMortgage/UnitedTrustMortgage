@@ -36,7 +36,18 @@ export const handler = async (event) => {
     .ilike("email", email)
     .maybeSingle();
   if (exErr) return err(500, `lookup failed: ${exErr.message}`);
-  if (existing) return err(409, "operator with that email already exists");
+
+  if (existing) {
+    // Upsert: refresh the hash on the existing row (e.g. to fix a bad hash).
+    const { data, error } = await supabase
+      .from("quote_operators")
+      .update({ name, pass_code_hash: passHash, active: true, is_admin: !!isAdmin })
+      .eq("id", existing.id)
+      .select("id, name, email, active, is_admin")
+      .single();
+    if (error) return err(500, `update failed: ${error.message}`);
+    return json(200, { updated: data });
+  }
 
   const { data, error } = await supabase
     .from("quote_operators")
