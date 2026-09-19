@@ -164,7 +164,7 @@ clear "X env var required" errors.
 
 - `arin@myunitedtrust.com` — admin (sees all quotes)
 - `michael@myunitedtrust.com` — standard (sees only their own quotes)
-- `john@myunitedtrust.com` — standard (John Kim, added 2026-09-19)
+- `john@myunitedtrust.com` — admin (John Kim, company owner — sees all quotes; added 2026-09-19)
 
 > Gotcha when creating hashes outside Postgres: pgcrypto's `crypt()`
 > only verifies `$2a$` bcrypt hashes — a `$2b$` hash (bcryptjs default)
